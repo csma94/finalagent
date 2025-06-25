@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "name": "bahinlink-admin-portal",
+  "builds": [
+    {
+      "src": "admin-portal/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build",
+        "buildCommand": "cd admin-portal && npm install && npm run build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/admin-portal/build/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/admin-portal/build/index.html"
+    }
+  ],
+  "functions": {},
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/admin-portal/build/index.html"
+    }
+  ]
+}

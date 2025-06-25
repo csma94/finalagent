@@ -1,0 +1,102 @@
+{
+  service: 'bahinlink-api',
+  environment: 'development',
+  version: '1.0.0',
+  seedType: 'basic',
+  force: false,
+  skipExisting: true,
+  level: 'info',
+  message: 'Starting database seeding process',
+  timestamp: '2025-06-19 11:51:52'
+}
+{
+  message: 'Seeding system configuration',
+  level: 'info',
+  service: 'bahinlink-api',
+  environment: 'development',
+  version: '1.0.0',
+  timestamp: '2025-06-19 11:52:00'
+}
+{
+  service: 'bahinlink-api',
+  environment: 'development',
+  version: '1.0.0',
+  created: [
+    'SYSTEM_INITIALIZED',
+    'DEFAULT_SETTINGS',
+    'NOTIFICATION_SETTINGS',
+    'SECURITY_SETTINGS'
+  ],
+  level: 'info',
+  message: 'System configuration seeded',
+  timestamp: '2025-06-19 11:52:01'
+}
+{
+  message: 'Seeding admin user',
+  level: 'info',
+  service: 'bahinlink-api',
+  environment: 'development',
+  version: '1.0.0',
+  timestamp: '2025-06-19 11:52:01'
+}
+{
+  service: 'bahinlink-api',
+  environment: 'development',
+  version: '1.0.0',
+  seedType: 'basic',
+  force: false,
+  skipExisting: true,
+  level: 'info',
+  message: 'Starting database seeding process',
+  timestamp: '2025-06-19 11:54:14'
+}
+{
+  message: 'Seeding system configuration',
+  level: 'info',
+  service: 'bahinlink-api',
+  environment: 'development',
+  version: '1.0.0',
+  timestamp: '2025-06-19 11:54:16'
+}
+{
+  service: 'bahinlink-api',
+  environment: 'development',
+  version: '1.0.0',
+  created: [
+    'SYSTEM_INITIALIZED',
+    'DEFAULT_SETTINGS',
+    'NOTIFICATION_SETTINGS',
+    'SECURITY_SETTINGS'
+  ],
+  level: 'info',
+  message: 'System configuration seeded',
+  timestamp: '2025-06-19 11:54:19'
+}
+{
+  message: 'Seeding admin user',
+  level: 'info',
+  service: 'bahinlink-api',
+  environment: 'development',
+  version: '1.0.0',
+  timestamp: '2025-06-19 11:54:19'
+}
+{
+  service: 'bahinlink-api',
+  environment: 'development',
+  version: '1.0.0',
+  id: '71d1b59c-59be-4543-bbde-46ad53fd1528',
+  username: 'admin',
+  email: 'admin@bahinlink.com',
+  password: '!gcdY@nP*C5iV&*q',
+  level: 'info',
+  message: 'Admin user created',
+  timestamp: '2025-06-19 11:54:20'
+}
+{
+  message: 'Seeding basic data',
+  level: 'info',
+  service: 'bahinlink-api',
+  environment: 'development',
+  version: '1.0.0',
+  timestamp: '2025-06-19 11:54:20'
+}
