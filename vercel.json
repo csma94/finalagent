@@ -28,25 +28,19 @@
       }
     }
   ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/backend/server.js"
-    },
-    {
-      "src": "/client/(.*)",
-      "dest": "/client-portal/build/$1"
-    },
-    {
-      "src": "/static/(.*)",
-      "dest": "/admin-portal/build/static/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/admin-portal/build/index.html"
-    }
-  ],
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/backend/server.js"
+    },
+    {
+      "source": "/client/(.*)",
+      "destination": "/client-portal/build/$1"
+    },
+    {
+      "source": "/static/(.*)",
+      "destination": "/admin-portal/build/static/$1"
+    },
     {
       "source": "/(.*)",
       "destination": "/admin-portal/build/index.html"
