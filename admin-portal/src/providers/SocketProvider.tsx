@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import io from 'socket.io-client';
 type Socket = any;
 import { useAppSelector } from '../store';
+import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 
 interface SocketContextType {
   socket: Socket | null;
@@ -28,12 +29,12 @@ interface SocketProviderProps {
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const { isSignedIn, session } = useAppSelector((state) => state.clerkAuth);
+  const { isSignedIn } = useAppSelector((state) => state.clerkAuth);
+  const { getToken } = useClerkAuth();
 
   useEffect(() => {
-    if (isSignedIn && session) {
-      // Get token from Clerk session
-      session.getToken().then((token) => {
+    if (isSignedIn) {
+      getToken().then((token) => {
         if (token) {
           // Initialize socket connection
           const socketUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:3000';
@@ -64,14 +65,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       }).catch((error) => {
         console.error('Failed to get Clerk token:', error);
       });
-
-      return () => {
-        if (socket) {
-          socket.close();
-          setSocket(null);
-          setIsConnected(false);
-        }
-      };
     } else {
       // Clean up socket if not signed in
       if (socket) {
@@ -80,7 +73,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
         setIsConnected(false);
       }
     }
-  }, [isSignedIn, session, socket]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSignedIn]);
 
   return (
     <SocketContext.Provider value={{ socket, isConnected }}>

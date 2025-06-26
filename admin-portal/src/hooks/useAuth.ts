@@ -57,8 +57,10 @@ export const useAuth = () => {
   // Get JWT token for API calls
   const getToken = async (): Promise<string | null> => {
     try {
-      if (session) {
+      if (session && typeof session.getToken === 'function') {
         return await session.getToken();
+      } else if (clerkAuth && typeof clerkAuth.getToken === 'function') {
+        return await clerkAuth.getToken();
       }
       return null;
     } catch (error) {
