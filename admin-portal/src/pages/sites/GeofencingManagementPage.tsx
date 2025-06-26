@@ -436,7 +436,7 @@ const GeofencingManagementPage: React.FC = () => {
             <Card>
               <CardContent>
                 <Box display="flex" alignItems="center" gap={2}>
-                  <ValidIcon color="success" />
+                  <CheckCircle color="success" />
                   <Box>
                     <Typography variant="h6">{stats.activeZones}</Typography>
                     <Typography variant="body2" color="text.secondary">
