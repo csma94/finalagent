@@ -101,7 +101,7 @@ const clerkAuthSlice = createSlice({
       if (session) {
         state.session = {
           id: session.id,
-          expireAt: session.expireAt ? new Date(session.expireAt).toISOString() : null,
+          expireAt: session.expireAt ? new Date(session.expireAt).toISOString() : '',
         };
       } else {
         state.session = null;
