@@ -192,6 +192,14 @@ interface AgentCertification {
   };
 }
 
+interface TrainingAssessment {
+  id: string;
+  title: string;
+  score?: number;
+  date?: string;
+  // Ajoutez d'autres champs selon les besoins du projet
+}
+
 interface TrainingStats {
   totalTrainings: number;
   activeTrainings: number;
