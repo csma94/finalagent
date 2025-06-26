@@ -2,6 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -9,7 +10,27 @@ import AccountIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-const Navbar = ({ user, onProfileClick, onSettingsClick, onLogout }) => {
+interface NavbarProps {
+  user: {
+    firstName?: string;
+    lastName?: string;
+    primaryEmailAddress?: { emailAddress?: string };
+    publicMetadata?: { role?: string };
+  };
+  onProfileClick: () => void;
+  onSettingsClick: () => void;
+  onLogout: () => void;
+}
+
+const Navbar = ({ user, onProfileClick, onSettingsClick, onLogout }: NavbarProps) => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const handleProfileClick = () => {
     onProfileClick();
   };
