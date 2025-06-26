@@ -28,6 +28,7 @@ import {
   Badge,
   Switch,
   FormControlLabel,
+  FormGroup,
 } from '@mui/material';
 import {
   Refresh as RefreshIcon,

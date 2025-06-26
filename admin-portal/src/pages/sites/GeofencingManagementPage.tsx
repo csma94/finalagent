@@ -42,7 +42,7 @@ import {
   LocationOn as LocationIcon,
   RadioButtonChecked as GeofenceIcon,
   Warning as WarningIcon,
-  CheckCircle as ValidIcon,
+  CheckCircle,
   Cancel as ViolationIcon,
   Settings as SettingsIcon,
   Notifications as AlertIcon,
