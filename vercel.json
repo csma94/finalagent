@@ -1,6 +1,7 @@
 {
   "version": 2,
   "name": "bahinlink-admin-portal",
+  "outputDirectory": "admin-portal/build",
   "builds": [
     {
       "src": "admin-portal/package.json",
