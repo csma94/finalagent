@@ -46,7 +46,6 @@
       "dest": "/admin-portal/build/index.html"
     }
   ],
-  "functions": {},
   "rewrites": [
     {
       "source": "/(.*)",
