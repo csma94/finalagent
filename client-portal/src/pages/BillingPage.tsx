@@ -30,10 +30,8 @@ import {
 import {
   Refresh as RefreshIcon,
   GetApp as DownloadIcon,
-  Payment as PaymentIcon,
   Receipt as InvoiceIcon,
   AttachMoney as MoneyIcon,
-  Schedule as ScheduleIcon,
   CheckCircle as PaidIcon,
   Warning as OverdueIcon,
   Visibility as ViewIcon,
@@ -106,7 +104,6 @@ interface BillingStats {
 }
 
 const BillingPage: React.FC = () => {
-  const { user } = useAuth();
   const { getToken } = useClerkAuth();
   
   // State management

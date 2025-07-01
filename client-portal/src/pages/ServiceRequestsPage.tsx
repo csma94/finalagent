@@ -8,67 +8,17 @@ import {
   Button,
   Alert,
   CircularProgress,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  Chip,
-  Divider,
-  Paper,
-  Tab,
-  Tabs,
-  Stepper,
-  Step,
-  StepLabel,
-  StepContent,
 } from '@mui/material';
 import {
   Add as AddIcon,
   Refresh as RefreshIcon,
-  Search as SearchIcon,
   Assignment as RequestIcon,
-  Schedule as ScheduleIcon,
-  Person as PersonIcon,
-  LocationOn as LocationIcon,
-  Priority as PriorityIcon,
   CheckCircle as CompletedIcon,
-  Cancel as CancelledIcon,
   HourglassEmpty as PendingIcon,
   PlayArrow as InProgressIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../hooks/useAuth';
 import { useAuth as useClerkAuth } from '@clerk/clerk-react';
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`service-tabpanel-${index}`}
-      aria-labelledby={`service-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
 
 interface ServiceRequest {
   id: string;
@@ -129,18 +79,11 @@ const ServiceRequestsPage: React.FC = () => {
   const { getToken } = useClerkAuth();
   
   // State management
-  const [activeTab, setActiveTab] = useState(0);
   const [serviceRequests, setServiceRequests] = useState<ServiceRequest[]>([]);
   const [stats, setStats] = useState<ServiceRequestStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedRequest, setSelectedRequest] = useState<ServiceRequest | null>(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [filterType, setFilterType] = useState<string>('all');
-  const [filterPriority, setFilterPriority] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   // Form states
@@ -209,47 +152,6 @@ const ServiceRequestsPage: React.FC = () => {
     }
   }, [getToken]);
 
-  const createServiceRequest = async () => {
-    try {
-      const token = await getToken();
-      if (!token) {
-        throw new Error('No authentication token available');
-      }
-
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3000/api'}/client/service-requests`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...newRequest,
-          requestedBy: user?.id,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create service request');
-      }
-
-      setCreateDialogOpen(false);
-      setNewRequest({
-        type: 'SECURITY_ENHANCEMENT',
-        title: '',
-        description: '',
-        priority: 'MEDIUM',
-        siteId: '',
-        estimatedCost: 0,
-        estimatedDuration: 0,
-      });
-      fetchServiceRequests();
-
-    } catch (err: any) {
-      console.error('Failed to create service request:', err);
-      setError('Failed to create service request. Please try again.');
-    }
-  };
-
   // Utility functions
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -259,7 +161,7 @@ const ServiceRequestsPage: React.FC = () => {
         return <InProgressIcon color="info" />;
       case 'CANCELLED':
       case 'REJECTED':
-        return <CancelledIcon color="error" />;
+        return <InProgressIcon color="error" />;
       default:
         return <PendingIcon color="warning" />;
     }
@@ -309,16 +211,6 @@ const ServiceRequestsPage: React.FC = () => {
     const remainingHours = hours % 24;
     return remainingHours > 0 ? `${days} days ${remainingHours} hours` : `${days} days`;
   };
-
-  const filteredRequests = serviceRequests.filter(request => {
-    if (filterStatus !== 'all' && request.status !== filterStatus) return false;
-    if (filterType !== 'all' && request.type !== filterType) return false;
-    if (filterPriority !== 'all' && request.priority !== filterPriority) return false;
-    if (searchQuery && 
-        !request.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !request.description.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
 
   // Effects
   useEffect(() => {

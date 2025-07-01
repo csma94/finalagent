@@ -19,7 +19,6 @@ import {
 } from '@mui/material';
 import {
   LocationOn as LocationIcon,
-  Security as SecurityIcon,
   Warning as WarningIcon,
   CheckCircle as CheckIcon,
   Refresh as RefreshIcon,
@@ -79,15 +78,43 @@ const LiveMonitoringPage: React.FC = () => {
 
     newSocket.on('connect', () => {
       console.log('Connected to client monitoring socket');
-      newSocket.emit('join_client_monitoring', { clientId: user?.clientId });
+      newSocket.emit('join_client_monitoring', { clientId: user?.id });
     });
 
     newSocket.on('agent_location_update', (data: any) => {
-      updateAgentLocation(data);
+      setAgentLocations(prev => {
+        const existingIndex = prev.findIndex(agent => agent.agentId === data.agentId);
+        const updatedAgent: AgentLocation = {
+          agentId: data.agentId,
+          agentName: data.agentName || `Agent ${data.agentId}`,
+          latitude: data.latitude,
+          longitude: data.longitude,
+          accuracy: data.accuracy,
+          timestamp: data.timestamp,
+          shiftId: data.shiftId,
+          siteName: data.siteName,
+          status: data.status || 'active',
+          lastUpdate: new Date().toISOString(),
+        };
+
+        if (existingIndex >= 0) {
+          const newLocations = [...prev];
+          newLocations[existingIndex] = updatedAgent;
+          return newLocations;
+        } else {
+          return [...prev, updatedAgent];
+        }
+      });
     });
 
     newSocket.on('site_status_update', (data: any) => {
-      updateSiteStatus(data);
+      setSiteStatuses(prev =>
+        prev.map(site =>
+          site.siteId === data.siteId
+            ? { ...site, ...data }
+            : site
+        )
+      );
     });
 
     newSocket.on('client_alert', (alert: any) => {
@@ -99,14 +126,9 @@ const LiveMonitoringPage: React.FC = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [user?.clientId]);
+  }, [user?.id]);
 
-  // Load initial data
-  useEffect(() => {
-    loadMonitoringData();
-  }, [selectedSite]);
-
-  const loadMonitoringData = async () => {
+  const loadMonitoringData = useCallback(async () => {
     try {
       setIsLoading(true);
       const [trackingResponse, sitesResponse] = await Promise.all([
@@ -128,43 +150,12 @@ const LiveMonitoringPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedSite]);
 
-  const updateAgentLocation = useCallback((data: any) => {
-    setAgentLocations(prev => {
-      const existingIndex = prev.findIndex(agent => agent.agentId === data.agentId);
-      const updatedAgent: AgentLocation = {
-        agentId: data.agentId,
-        agentName: data.agentName || `Agent ${data.agentId}`,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        accuracy: data.accuracy,
-        timestamp: data.timestamp,
-        shiftId: data.shiftId,
-        siteName: data.siteName,
-        status: data.status || 'active',
-        lastUpdate: new Date().toISOString(),
-      };
-
-      if (existingIndex >= 0) {
-        const newLocations = [...prev];
-        newLocations[existingIndex] = updatedAgent;
-        return newLocations;
-      } else {
-        return [...prev, updatedAgent];
-      }
-    });
-  }, []);
-
-  const updateSiteStatus = useCallback((data: any) => {
-    setSiteStatuses(prev =>
-      prev.map(site =>
-        site.siteId === data.siteId
-          ? { ...site, ...data }
-          : site
-      )
-    );
-  }, []);
+  // Load initial data
+  useEffect(() => {
+    loadMonitoringData();
+  }, [loadMonitoringData]);
 
   const getAgentMarkerColor = (agent: AgentLocation) => {
     if (agent.status === 'alert') return '#f44336'; // Red
@@ -181,8 +172,8 @@ const LiveMonitoringPage: React.FC = () => {
     }
   };
 
-  const filteredAgents = selectedSite === 'all' 
-    ? agentLocations 
+  const filteredAgents = selectedSite === 'all'
+    ? agentLocations
     : agentLocations.filter(agent => agent.siteName === selectedSite);
 
   if (isLoading) {
@@ -211,7 +202,7 @@ const LiveMonitoringPage: React.FC = () => {
               ))}
             </Select>
           </FormControl>
-          
+
           <FormControlLabel
             control={
               <Switch
@@ -221,7 +212,7 @@ const LiveMonitoringPage: React.FC = () => {
             }
             label="Auto Refresh"
           />
-          
+
           <Button
             variant="outlined"
             startIcon={<RefreshIcon />}
@@ -403,15 +394,15 @@ const LiveMonitoringPage: React.FC = () => {
                       icon={site.status === 'covered' ? <CheckIcon /> : <WarningIcon />}
                     />
                   </Box>
-                  
+
                   <Typography variant="body2" color="text.secondary">
                     Coverage: {site.agentCount}/{site.requiredAgents} agents
                   </Typography>
-                  
+
                   <Typography variant="body2" color="text.secondary">
                     Last Activity: {new Date(site.lastActivity).toLocaleString()}
                   </Typography>
-                  
+
                   <Button
                     size="small"
                     onClick={() => setSelectedSite(site.siteName)}

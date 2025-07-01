@@ -37,10 +37,8 @@ import {
 import {
   Download as DownloadIcon,
   Visibility as ViewIcon,
-  FilterList as FilterIcon,
   Search as SearchIcon,
-  DateRange as DateRangeIcon,
-  Assessment as ReportIcon,
+  Assessment as AssessmentIcon,
   Security as SecurityIcon,
   Warning as WarningIcon,
   CheckCircle as CheckIcon,
@@ -87,10 +85,9 @@ interface ReportAccessManagerProps {
 }
 
 const ReportAccessManager: React.FC<ReportAccessManagerProps> = ({ style }) => {
-  const { user } = useAuth();
+  const { isLoading } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [filteredReports, setFilteredReports] = useState<Report[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
@@ -115,17 +112,13 @@ const ReportAccessManager: React.FC<ReportAccessManagerProps> = ({ style }) => {
 
   const loadReports = async () => {
     try {
-      setIsLoading(true);
       const response = await clientPortalAPI.getReports({
-        clientId: user?.clientId,
         includeAttachments: true,
         includeMetadata: true,
       });
       setReports(response.data.reports || []);
     } catch (error) {
       console.error('Failed to load reports:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -184,15 +177,6 @@ const ReportAccessManager: React.FC<ReportAccessManagerProps> = ({ style }) => {
     }
   };
 
-  const handleShareReport = async (reportId: string, emails: string[]) => {
-    try {
-      await clientPortalAPI.shareReport(reportId, { emails });
-      // Show success message
-    } catch (error) {
-      console.error('Failed to share report:', error);
-    }
-  };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'APPROVED': return 'success';
@@ -213,20 +197,20 @@ const ReportAccessManager: React.FC<ReportAccessManagerProps> = ({ style }) => {
     }
   };
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'PATROL': return <SecurityIcon />;
-      case 'INCIDENT': return <WarningIcon />;
-      case 'MAINTENANCE': return <ReportIcon />;
-      case 'SUMMARY': return <AssessmentIcon />;
-      case 'COMPLIANCE': return <CheckIcon />;
-      default: return <ReportIcon />;
-    }
-  };
+const getTypeIcon = (type: string) => {
+  switch (type) {
+    case 'PATROL': return <SecurityIcon />;
+    case 'INCIDENT': return <WarningIcon />;
+    case 'MAINTENANCE': return <AssessmentIcon />;
+    case 'SUMMARY': return <AssessmentIcon />;
+    case 'COMPLIANCE': return <CheckIcon />;
+    default: return <AssessmentIcon />;
+  }
+};
 
-  const getUniqueValues = (field: keyof Report) => {
-    return [...new Set(reports.map(report => report[field]))].filter(Boolean);
-  };
+const getUniqueValues = (field: keyof Report) => {
+  return Array.from(new Set(reports.map(report => report[field]))).filter(Boolean);
+};
 
   const renderReportCard = (report: Report) => (
     <Card key={report.id} sx={{ mb: 2 }}>
@@ -433,9 +417,9 @@ const ReportAccessManager: React.FC<ReportAccessManagerProps> = ({ style }) => {
                     label="Type"
                   >
                     <MenuItem value="">All Types</MenuItem>
-                    {getUniqueValues('type').map((type) => (
-                      <MenuItem key={type} value={type}>{type}</MenuItem>
-                    ))}
+                  {getUniqueValues('type').filter((t): t is string => typeof t === 'string').map((type) => (
+                    <MenuItem key={type} value={type}>{type}</MenuItem>
+                  ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -449,9 +433,9 @@ const ReportAccessManager: React.FC<ReportAccessManagerProps> = ({ style }) => {
                     label="Site"
                   >
                     <MenuItem value="">All Sites</MenuItem>
-                    {getUniqueValues('siteName').map((site) => (
-                      <MenuItem key={site} value={site}>{site}</MenuItem>
-                    ))}
+                  {getUniqueValues('siteName').filter((s): s is string => typeof s === 'string').map((site) => (
+                    <MenuItem key={site} value={site}>{site}</MenuItem>
+                  ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -465,9 +449,9 @@ const ReportAccessManager: React.FC<ReportAccessManagerProps> = ({ style }) => {
                     label="Status"
                   >
                     <MenuItem value="">All Statuses</MenuItem>
-                    {getUniqueValues('status').map((status) => (
-                      <MenuItem key={status} value={status}>{status}</MenuItem>
-                    ))}
+                  {getUniqueValues('status').filter((s): s is string => typeof s === 'string').map((status) => (
+                    <MenuItem key={status} value={status}>{status}</MenuItem>
+                  ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -477,20 +461,24 @@ const ReportAccessManager: React.FC<ReportAccessManagerProps> = ({ style }) => {
                   <DatePicker
                     label="From"
                     value={dateRange.startDate}
-                    onChange={(newValue) => setDateRange(prev => ({ 
-                      ...prev, 
-                      startDate: newValue || new Date() 
+                    onChange={(newValue) => setDateRange(prev => ({
+                      ...prev,
+                      startDate: newValue || new Date()
                     }))}
-                    renderInput={(params) => <TextField {...params} size="small" />}
+                    slotProps={{
+                      textField: (params) => ({ ...params, size: 'small' }),
+                    }}
                   />
                   <DatePicker
                     label="To"
                     value={dateRange.endDate}
-                    onChange={(newValue) => setDateRange(prev => ({ 
-                      ...prev, 
-                      endDate: newValue || new Date() 
+                    onChange={(newValue) => setDateRange(prev => ({
+                      ...prev,
+                      endDate: newValue || new Date()
                     }))}
-                    renderInput={(params) => <TextField {...params} size="small" />}
+                    slotProps={{
+                      textField: (params) => ({ ...params, size: 'small' }),
+                    }}
                   />
                 </Box>
               </Grid>

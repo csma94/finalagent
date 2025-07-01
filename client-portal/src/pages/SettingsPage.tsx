@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Grid,
-  Card,
-  CardContent,
   Typography,
   Button,
   Alert,
@@ -18,7 +16,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Avatar,
   Divider,
   List,
   ListItem,
@@ -29,6 +26,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Chip,
 } from '@mui/material';
 import {
   Save as SaveIcon,
@@ -39,9 +37,7 @@ import {
   Notifications as NotificationsIcon,
   Person as PersonIcon,
   Business as BusinessIcon,
-  LocationOn as LocationIcon,
   Phone as PhoneIcon,
-  Email as EmailIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../hooks/useAuth';
 import { useAuth as useClerkAuth } from '@clerk/clerk-react';
@@ -118,7 +114,6 @@ interface EmergencyContact {
 }
 
 const SettingsPage: React.FC = () => {
-  const { user } = useAuth();
   const { getToken } = useClerkAuth();
   
   // State management
@@ -301,12 +296,13 @@ const SettingsPage: React.FC = () => {
 
   const updateNestedProfile = (section: string, field: string, value: any) => {
     if (!profile) return;
-    setProfile({
-      ...profile,
-      [section]: {
-        ...profile[section as keyof ClientProfile],
-        [field]: value,
-      },
+    setProfile(prevProfile => {
+      if (!prevProfile) return null;
+      const updatedSection = { ...(prevProfile[section as keyof ClientProfile] as any), [field]: value };
+      return {
+        ...prevProfile,
+        [section]: updatedSection,
+      } as ClientProfile;
     });
   };
 

@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import io from 'socket.io-client';
-type Socket = any;
 import { useAppSelector } from '../store';
 import { useAuth as useClerkAuth } from '@clerk/clerk-react';
+type Socket = any;
 
 interface SocketContextType {
   socket: Socket | null;

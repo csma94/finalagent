@@ -15,7 +15,6 @@ import {
   ListItemAvatar,
   Avatar,
   Chip,
-  LinearProgress,
   Divider,
 } from '@mui/material';
 import {
@@ -25,7 +24,6 @@ import {
   Assignment as ReportIcon,
   Warning as IncidentIcon,
   Schedule as ScheduleIcon,
-  TrendingUp as TrendingUpIcon,
   Notifications as NotificationIcon,
   CheckCircle as ActiveIcon,
   Cancel as InactiveIcon,
@@ -74,14 +72,13 @@ interface AgentStatus {
 }
 
 const DashboardPage: React.FC = () => {
-  const { user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { getToken } = useClerkAuth();
-  
+
   // State management
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [siteStatuses, setSiteStatuses] = useState<SiteStatus[]>([]);
-  const [agentStatuses, setAgentStatuses] = useState<AgentStatus[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -96,7 +93,7 @@ const DashboardPage: React.FC = () => {
         throw new Error('No authentication token available');
       }
 
-      const [statsResponse, activityResponse, sitesResponse, agentsResponse] = await Promise.all([
+      const [statsResponse, activityResponse, sitesResponse] = await Promise.all([
         fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3000/api'}/client/dashboard/stats`, {
           method: 'GET',
           headers: {
@@ -118,23 +115,15 @@ const DashboardPage: React.FC = () => {
             'Content-Type': 'application/json',
           },
         }),
-        fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3000/api'}/client/agents/status`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        })
       ]);
 
-      if (!statsResponse.ok || !activityResponse.ok || !sitesResponse.ok || !agentsResponse.ok) {
+      if (!statsResponse.ok || !activityResponse.ok || !sitesResponse.ok) {
         throw new Error('Failed to fetch dashboard data');
       }
 
       const statsResult = await statsResponse.json();
       const activityResult = await activityResponse.json();
       const sitesResult = await sitesResponse.json();
-      const agentsResult = await agentsResponse.json();
 
       setStats(statsResult.data || {
         activeSites: 0,
@@ -148,7 +137,6 @@ const DashboardPage: React.FC = () => {
       });
       setRecentActivity(activityResult.data || []);
       setSiteStatuses(sitesResult.data || []);
-      setAgentStatuses(agentsResult.data || []);
       setLastUpdated(new Date());
 
     } catch (err: any) {
@@ -229,6 +217,10 @@ const DashboardPage: React.FC = () => {
     const interval = setInterval(fetchDashboardData, 30000); // Refresh every 30 seconds
     return () => clearInterval(interval);
   }, [fetchDashboardData]);
+
+  if (!isAuthenticated) {
+    return null; // Or redirect to login
+  }
 
   // Loading state
   if (loading && !stats) {

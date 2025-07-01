@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { apiClient } from '../../services/api';
+import apiClient from '../../services/api';
 
 interface DashboardMetrics {
   activeSites: number;

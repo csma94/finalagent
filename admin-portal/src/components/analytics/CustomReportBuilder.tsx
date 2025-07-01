@@ -37,6 +37,8 @@ import {
   Download as DownloadIcon,
   DragIndicator as DragIcon,
 } from '@mui/icons-material';
+
+import { analyticsAPI } from '../../services/api';
 // Temporary fallback for react-beautiful-dnd
 let DragDropContext: any, Droppable: any, Draggable: any;
 try {
@@ -50,8 +52,6 @@ try {
   Droppable = ({ children }: any) => children({ droppableProps: {}, innerRef: () => {} });
   Draggable = ({ children }: any) => children({ draggableProps: {}, dragHandleProps: {}, innerRef: () => {} });
 }
-
-import { analyticsAPI } from '../../services/api';
 
 interface ReportField {
   id: string;

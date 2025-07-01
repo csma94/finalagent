@@ -8,46 +8,14 @@ import {
   Button,
   Alert,
   CircularProgress,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TablePagination,
-  Paper,
-  Chip,
-  IconButton,
-  Tooltip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Avatar,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
 } from '@mui/material';
 import {
   Refresh as RefreshIcon,
-  Search as SearchIcon,
-  FilterList as FilterIcon,
   GetApp as ExportIcon,
-  Visibility as ViewIcon,
   Assignment as ReportIcon,
   Security as SecurityIcon,
   Warning as IncidentIcon,
   Schedule as ScheduleIcon,
-  Person as PersonIcon,
-  LocationOn as LocationIcon,
-  PhotoCamera as PhotoIcon,
-  AttachFile as AttachmentIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../hooks/useAuth';
 import { useAuth as useClerkAuth } from '@clerk/clerk-react';
@@ -103,7 +71,6 @@ interface ReportStats {
 }
 
 const ReportsPage: React.FC = () => {
-  const { user } = useAuth();
   const { getToken } = useClerkAuth();
   
   // State management
@@ -111,8 +78,6 @@ const ReportsPage: React.FC = () => {
   const [stats, setStats] = useState<ReportStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
-  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [filterType, setFilterType] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterPriority, setFilterPriority] = useState<string>('all');
@@ -289,15 +254,6 @@ const ReportsPage: React.FC = () => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
-
-  const filteredReports = reports.filter(report => {
-    if (searchQuery && 
-        !report.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !report.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !report.agent.user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !report.agent.user.lastName.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
 
   // Effects
   useEffect(() => {

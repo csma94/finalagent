@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Grid,
   Card,
   CardContent,
   Typography,
   Box,
-  Chip,
-  IconButton,
   Button,
   Alert,
   Skeleton,
 } from '@mui/material';
 import {
   Refresh as RefreshIcon,
-  TrendingUp as TrendingUpIcon,
   Security as SecurityIcon,
   Assignment as AssignmentIcon,
   People as PeopleIcon,
@@ -52,23 +49,23 @@ const DashboardPage: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
 
   // Real-time updates via Socket.IO
-  useSocket('dashboard_update', (data) => {
+  useSocket('dashboard_update', (data: any) => {
     // Handle real-time dashboard updates
     console.log('Dashboard update received:', data);
     // You could dispatch specific actions to update parts of the dashboard
   });
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     try {
       await dispatch(fetchDashboardData()).unwrap();
     } catch (error) {
       console.error('Failed to load dashboard data:', error);
     }
-  };
+  }, [dispatch]);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
 
   const handleRefresh = async () => {
     setRefreshing(true);

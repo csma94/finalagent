@@ -6,8 +6,6 @@ import {
   Typography,
   Button,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -40,13 +38,11 @@ const ReportSignature: React.FC<ReportSignatureProps> = ({
 }) => {
   const { user } = useAuth();
   const signatureRef = useRef<SignatureCanvas>(null);
-  
+
   const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
   const [approved, setApproved] = useState(true);
   const [feedback, setFeedback] = useState('');
-  const [signedBy, setSignedBy] = useState(user?.profile?.firstName && user?.profile?.lastName 
-    ? `${user.profile.firstName} ${user.profile.lastName}` 
-    : user?.username || '');
+  const [signedBy, setSignedBy] = useState(user?.name || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

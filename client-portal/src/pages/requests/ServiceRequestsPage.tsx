@@ -24,11 +24,9 @@ import {
 } from '@mui/material';
 import {
   Add as AddIcon,
-  Edit as EditIcon,
   Visibility as ViewIcon,
-  Priority as PriorityIcon,
+  ReportProblem as PriorityIcon,
   Schedule as ScheduleIcon,
-  CheckCircle as CompleteIcon,
 } from '@mui/icons-material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -61,7 +59,6 @@ interface Site {
 }
 
 const ServiceRequestsPage: React.FC = () => {
-  const { user } = useAuth();
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [sites, setSites] = useState<Site[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -402,7 +399,7 @@ const ServiceRequestsPage: React.FC = () => {
                   label="Preferred Response Time (Optional)"
                   value={formData.preferredResponseTime}
                   onChange={(newValue) => setFormData(prev => ({ ...prev, preferredResponseTime: newValue }))}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
+                  slotProps={{ textField: { fullWidth: true } }}
                 />
               </Grid>
             </Grid>

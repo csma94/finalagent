@@ -8,43 +8,14 @@ import {
   Button,
   Alert,
   CircularProgress,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TablePagination,
-  Paper,
-  Chip,
-  IconButton,
-  Tooltip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Avatar,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
 } from '@mui/material';
 import {
   Refresh as RefreshIcon,
-  Search as SearchIcon,
-  Visibility as ViewIcon,
   Warning as IncidentIcon,
   Security as SecurityIcon,
-  Emergency as EmergencyIcon,
+  ReportProblem as EmergencyIcon,
   CheckCircle as ResolvedIcon,
   Schedule as PendingIcon,
-  Person as PersonIcon,
-  LocationOn as LocationIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../hooks/useAuth';
 import { useAuth as useClerkAuth } from '@clerk/clerk-react';
@@ -97,7 +68,6 @@ interface IncidentStats {
 }
 
 const IncidentsPage: React.FC = () => {
-  const { user } = useAuth();
   const { getToken } = useClerkAuth();
   
   // State management
@@ -105,8 +75,6 @@ const IncidentsPage: React.FC = () => {
   const [stats, setStats] = useState<IncidentStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
-  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [filterType, setFilterType] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterSeverity, setFilterSeverity] = useState<string>('all');
@@ -236,14 +204,6 @@ const IncidentsPage: React.FC = () => {
     const remainingMinutes = minutes % 60;
     return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
   };
-
-  const filteredIncidents = incidents.filter(incident => {
-    if (searchQuery && 
-        !incident.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !incident.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !incident.location.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
 
   // Effects
   useEffect(() => {

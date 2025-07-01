@@ -56,6 +56,13 @@ export const clientPortalAPI = {
   
   getReport: (reportId: string) => 
     apiClient.get(`/client-portal/reports/${reportId}`),
+
+  // Added missing downloadReport method
+  downloadReport: (reportId: string, format: 'pdf' | 'excel' | 'csv' = 'pdf') =>
+    apiClient.get(`/client-portal/reports/${reportId}/download`, {
+      params: { format },
+      responseType: 'blob',
+    }),
   
   // Service requests
   getServiceRequests: (params?: any) => 

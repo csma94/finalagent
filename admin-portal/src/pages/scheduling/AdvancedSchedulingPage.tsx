@@ -47,6 +47,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import moment from 'moment';
+
+import { useAuth } from '../../hooks/useAuth';
+import { schedulingAPI, sitesAPI, agentsAPI } from '../../services/api';
+import LoadingSpinner from '../../components/LoadingSpinner';
 // Temporary fallback for react-big-calendar
 let Calendar: any, momentLocalizer: any, Views: any;
 try {
@@ -61,11 +66,6 @@ try {
   momentLocalizer = () => ({});
   Views = { WEEK: 'week', MONTH: 'month', DAY: 'day' };
 }
-import moment from 'moment';
-
-import { useAuth } from '../../hooks/useAuth';
-import { schedulingAPI, sitesAPI, agentsAPI } from '../../services/api';
-import LoadingSpinner from '../../components/LoadingSpinner';
 
 const localizer = momentLocalizer(moment);
 

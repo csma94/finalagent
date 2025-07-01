@@ -28,6 +28,11 @@ import {
   Speed as SpeedIcon,
   BatteryFull as BatteryIcon,
 } from '@mui/icons-material';
+import io from 'socket.io-client';
+
+import { useAuth } from '../../hooks/useAuth';
+import { monitoringAPI } from '../../services/api';
+import LoadingSpinner from '../../components/LoadingSpinner';
 // Temporary fallback for @react-google-maps/api
 let GoogleMap: any, LoadScript: any, Marker: any, InfoWindow: any, Circle: any;
 try {
@@ -45,12 +50,7 @@ try {
   InfoWindow = () => null;
   Circle = () => null;
 }
-import io from 'socket.io-client';
 type Socket = any;
-
-import { useAuth } from '../../hooks/useAuth';
-import { monitoringAPI } from '../../services/api';
-import LoadingSpinner from '../../components/LoadingSpinner';
 
 interface AgentLocation {
   agentId: string;

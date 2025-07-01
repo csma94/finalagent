@@ -5,16 +5,16 @@ import { CssBaseline, Box } from '@mui/material';
 import { Provider } from 'react-redux';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { ClerkProvider, useAuth as useClerkAuth, RedirectToSignIn } from '@clerk/clerk-react';
 
 import { store } from './store';
-import { useAuth } from './hooks/useAuth';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import { SocketProvider } from './providers/SocketProvider';
 import { NotificationProvider } from './providers/NotificationProvider';
 
 // Components
 import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
-import LoadingScreen from './components/common/LoadingScreen';
 
 // Pages
 import DashboardPage from './pages/DashboardPage';
@@ -113,35 +113,35 @@ const AuthenticatedApp: React.FC = () => {
 };
 
 const AppContent: React.FC = () => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isSignedIn } = useClerkAuth();
 
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <Routes>
-        <Route path="*" element={<div>Please sign in using Clerk authentication</div>} />
-      </Routes>
-    );
+  if (!isSignedIn) {
+    return <RedirectToSignIn />;
   }
 
   return <AuthenticatedApp />;
 };
 
 const App: React.FC = () => {
+  if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
+    throw new Error('Missing Clerk publishable key');
+  }
+
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <CssBaseline />
-          <Router>
-            <AppContent />
-          </Router>
-        </LocalizationProvider>
-      </ThemeProvider>
-    </Provider>
+    <ClerkProvider publishableKey={process.env.REACT_APP_CLERK_PUBLISHABLE_KEY}>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <CssBaseline />
+            <Router>
+              <ErrorBoundary>
+                <AppContent />
+              </ErrorBoundary>
+            </Router>
+          </LocalizationProvider>
+        </ThemeProvider>
+      </Provider>
+    </ClerkProvider>
   );
 };
 
