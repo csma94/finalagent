@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline, Box } from '@mui/material';
+import { CssBaseline, Box, Container, Card, CardContent, Typography, CircularProgress } from '@mui/material';
+import { Security as SecurityIcon } from '@mui/icons-material';
 import { Provider } from 'react-redux';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { ClerkProvider, useAuth as useClerkAuth, RedirectToSignIn } from '@clerk/clerk-react';
+import { ClerkProvider, useAuth as useClerkAuth, SignIn, SignUp } from '@clerk/clerk-react';
 
 import { store } from './store';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -96,14 +97,13 @@ const AuthenticatedApp: React.FC = () => {
             }}
           >
             <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/service-requests" element={<ServiceRequestsPage />} />
               <Route path="/incidents" element={<IncidentsPage />} />
               <Route path="/billing" element={<BillingPage />} />
               <Route path="/settings" element={<SettingsPage />} />
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              <Route path="*" element={<DashboardPage />} />
             </Routes>
           </Box>
         </Box>
@@ -113,13 +113,205 @@ const AuthenticatedApp: React.FC = () => {
 };
 
 const AppContent: React.FC = () => {
-  const { isSignedIn } = useClerkAuth();
+  const { isLoaded, isSignedIn } = useClerkAuth();
 
-  if (!isSignedIn) {
-    return <RedirectToSignIn />;
+  // Show loading spinner while Clerk is initializing
+  if (!isLoaded) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+      >
+        <CircularProgress size={60} />
+      </Box>
+    );
   }
 
-  return <AuthenticatedApp />;
+  return (
+    <Routes>
+      {/* Protected routes - only accessible when signed in */}
+      <Route
+        path="/dashboard"
+        element={
+          isSignedIn ? (
+            <AuthenticatedApp />
+          ) : (
+            <Navigate to="/sign-in" replace />
+          )
+        }
+      />
+      <Route
+        path="/reports"
+        element={
+          isSignedIn ? (
+            <AuthenticatedApp />
+          ) : (
+            <Navigate to="/sign-in" replace />
+          )
+        }
+      />
+      <Route
+        path="/service-requests"
+        element={
+          isSignedIn ? (
+            <AuthenticatedApp />
+          ) : (
+            <Navigate to="/sign-in" replace />
+          )
+        }
+      />
+      <Route
+        path="/incidents"
+        element={
+          isSignedIn ? (
+            <AuthenticatedApp />
+          ) : (
+            <Navigate to="/sign-in" replace />
+          )
+        }
+      />
+      <Route
+        path="/billing"
+        element={
+          isSignedIn ? (
+            <AuthenticatedApp />
+          ) : (
+            <Navigate to="/sign-in" replace />
+          )
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          isSignedIn ? (
+            <AuthenticatedApp />
+          ) : (
+            <Navigate to="/sign-in" replace />
+          )
+        }
+      />
+
+      {/* Sign-in page */}
+      <Route
+        path="/sign-in/*"
+        element={
+          !isSignedIn ? (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '100vh',
+                backgroundColor: 'background.default',
+              }}
+            >
+              <Container maxWidth="sm">
+                <Card>
+                  <CardContent sx={{ p: 4 }}>
+                    <Box sx={{ textAlign: 'center', mb: 4 }}>
+                      <SecurityIcon
+                        sx={{
+                          fontSize: 60,
+                          color: 'secondary.main',
+                          mb: 2
+                        }}
+                      />
+                      <Typography variant="h4" gutterBottom>
+                        BahinLink Client Portal
+                      </Typography>
+                      <Typography variant="subtitle1" color="text.secondary">
+                        Security Service Management
+                      </Typography>
+                    </Box>
+                    <SignIn
+                      routing="path"
+                      path="/sign-in"
+                      signUpUrl="/sign-up"
+                    />
+                  </CardContent>
+                </Card>
+              </Container>
+            </Box>
+          ) : (
+            <Navigate to="/dashboard" replace />
+          )
+        }
+      />
+
+      {/* Sign-up page */}
+      <Route
+        path="/sign-up/*"
+        element={
+          !isSignedIn ? (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '100vh',
+                backgroundColor: 'background.default',
+              }}
+            >
+              <Container maxWidth="sm">
+                <Card>
+                  <CardContent sx={{ p: 4 }}>
+                    <Box sx={{ textAlign: 'center', mb: 4 }}>
+                      <SecurityIcon
+                        sx={{
+                          fontSize: 60,
+                          color: 'secondary.main',
+                          mb: 2
+                        }}
+                      />
+                      <Typography variant="h4" gutterBottom>
+                        BahinLink Client Portal
+                      </Typography>
+                      <Typography variant="subtitle1" color="text.secondary">
+                        Security Service Management
+                      </Typography>
+                    </Box>
+                    <SignUp
+                      routing="path"
+                      path="/sign-up"
+                      signInUrl="/sign-in"
+                    />
+                  </CardContent>
+                </Card>
+              </Container>
+            </Box>
+          ) : (
+            <Navigate to="/dashboard" replace />
+          )
+        }
+      />
+
+      {/* Default redirects */}
+      <Route
+        path="/"
+        element={
+          isSignedIn ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <Navigate to="/sign-in" replace />
+          )
+        }
+      />
+
+      {/* Catch-all redirect */}
+      <Route
+        path="*"
+        element={
+          isSignedIn ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <Navigate to="/sign-in" replace />
+          )
+        }
+      />
+    </Routes>
+  );
 };
 
 const App: React.FC = () => {

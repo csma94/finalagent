@@ -1,0 +1,286 @@
+
+> bahinlink-client-portal@1.0.0 start
+> PORT=12002 HOST=0.0.0.0 DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts start
+
+Attempting to bind to HOST environment variable: 0.0.0.0
+If this was unintentional, check that you haven't mistakenly set it in your shell.
+Learn more here: https://cra.link/advanced-config
+
+(node:10806) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:10806) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Compiled with warnings.
+
+[eslint] 
+src/pages/BillingPage.tsx
+  Line 22:3:    'Dialog' is defined but never used                      @typescript-eslint/no-unused-vars
+  Line 23:3:    'DialogTitle' is defined but never used                 @typescript-eslint/no-unused-vars
+  Line 24:3:    'DialogContent' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 25:3:    'DialogActions' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 39:10:   'useAuth' is defined but never used                     @typescript-eslint/no-unused-vars
+  Line 116:10:  'selectedInvoice' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 117:10:  'invoiceDialogOpen' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src/pages/DashboardPage.tsx
+  Line 65:11:  'AgentStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/pages/IncidentsPage.tsx
+  Line 20:10:  'useAuth' is defined but never used                     @typescript-eslint/no-unused-vars
+  Line 78:22:  'setFilterType' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 79:24:  'setFilterStatus' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 80:26:  'setFilterSeverity' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 81:22:  'setFilterSite' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 82:23:  'setSearchQuery' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 83:16:  'setPage' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 84:23:  'setRowsPerPage' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 153:9:  'getTypeIcon' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 168:9:  'getStatusColor' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 182:9:  'getSeverityColor' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  Line 197:9:  'formatTimestamp' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 201:9:  'formatDuration' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+src/pages/ReportsPage.tsx
+  Line 20:10:  'useAuth' is defined but never used                     @typescript-eslint/no-unused-vars
+  Line 81:22:  'setFilterType' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 82:24:  'setFilterStatus' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 83:26:  'setFilterPriority' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 84:22:  'setFilterSite' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 85:23:  'setSearchQuery' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 86:16:  'setPage' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 87:23:  'setRowsPerPage' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 199:9:  'getTypeIcon' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 214:9:  'getStatusColor' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 231:9:  'getPriorityColor' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  Line 246:9:  'formatTimestamp' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 250:9:  'formatFileSize' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+src/pages/ServiceRequestsPage.tsx
+  Line 78:11:  'user' is assigned a value but never used              @typescript-eslint/no-unused-vars
+  Line 86:10:  'createDialogOpen' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 90:10:  'newRequest' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 90:22:  'setNewRequest' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 156:9:  'getStatusIcon' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 170:9:  'getStatusColor' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 186:9:  'getPriorityColor' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 201:9:  'formatCurrency' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 208:9:  'formatDuration' is assigned a value but never used    @typescript-eslint/no-unused-vars
+
+src/pages/SettingsPage.tsx
+  Line 42:10:  'useAuth' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/services/api.ts
+  Line 1:32:  'AxiosRequestConfig' is defined but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/pages/BillingPage.tsx
+  Line 22:3:    'Dialog' is defined but never used                      @typescript-eslint/no-unused-vars
+  Line 23:3:    'DialogTitle' is defined but never used                 @typescript-eslint/no-unused-vars
+  Line 24:3:    'DialogContent' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 25:3:    'DialogActions' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 39:10:   'useAuth' is defined but never used                     @typescript-eslint/no-unused-vars
+  Line 116:10:  'selectedInvoice' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 117:10:  'invoiceDialogOpen' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src/pages/DashboardPage.tsx
+  Line 65:11:  'AgentStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/pages/IncidentsPage.tsx
+  Line 20:10:  'useAuth' is defined but never used                     @typescript-eslint/no-unused-vars
+  Line 78:22:  'setFilterType' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 79:24:  'setFilterStatus' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 80:26:  'setFilterSeverity' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 81:22:  'setFilterSite' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 82:23:  'setSearchQuery' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 83:16:  'setPage' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 84:23:  'setRowsPerPage' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 153:9:  'getTypeIcon' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 168:9:  'getStatusColor' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 182:9:  'getSeverityColor' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  Line 197:9:  'formatTimestamp' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 201:9:  'formatDuration' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+src/pages/ReportsPage.tsx
+  Line 20:10:  'useAuth' is defined but never used                     @typescript-eslint/no-unused-vars
+  Line 81:22:  'setFilterType' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 82:24:  'setFilterStatus' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 83:26:  'setFilterPriority' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 84:22:  'setFilterSite' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 85:23:  'setSearchQuery' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 86:16:  'setPage' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 87:23:  'setRowsPerPage' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 199:9:  'getTypeIcon' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 214:9:  'getStatusColor' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 231:9:  'getPriorityColor' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  Line 246:9:  'formatTimestamp' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 250:9:  'formatFileSize' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+src/pages/ServiceRequestsPage.tsx
+  Line 78:11:  'user' is assigned a value but never used              @typescript-eslint/no-unused-vars
+  Line 86:10:  'createDialogOpen' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 90:10:  'newRequest' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 90:22:  'setNewRequest' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 156:9:  'getStatusIcon' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 170:9:  'getStatusColor' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 186:9:  'getPriorityColor' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 201:9:  'formatCurrency' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 208:9:  'formatDuration' is assigned a value but never used    @typescript-eslint/no-unused-vars
+
+src/pages/SettingsPage.tsx
+  Line 42:10:  'useAuth' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/services/api.ts
+  Line 1:32:  'AxiosRequestConfig' is defined but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+ERROR in src/pages/monitoring/LiveMonitoringPage.tsx:27:67
+TS2307: Cannot find module '@react-google-maps/api' or its corresponding type declarations.
+    25 |   Fullscreen as FullscreenIcon,
+    26 | } from '@mui/icons-material';
+  > 27 | import { GoogleMap, LoadScript, Marker, InfoWindow, Circle } from '@react-google-maps/api';
+       |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+    28 | import { io, Socket } from 'socket.io-client';
+    29 |
+    30 | import { useAuth } from '../../hooks/useAuth';
+
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/pages/BillingPage.tsx
+  Line 22:3:    'Dialog' is defined but never used                      @typescript-eslint/no-unused-vars
+  Line 23:3:    'DialogTitle' is defined but never used                 @typescript-eslint/no-unused-vars
+  Line 24:3:    'DialogContent' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 25:3:    'DialogActions' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 39:10:   'useAuth' is defined but never used                     @typescript-eslint/no-unused-vars
+  Line 116:10:  'selectedInvoice' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 117:10:  'invoiceDialogOpen' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src/pages/DashboardPage.tsx
+  Line 65:11:  'AgentStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/pages/IncidentsPage.tsx
+  Line 20:10:  'useAuth' is defined but never used                     @typescript-eslint/no-unused-vars
+  Line 78:22:  'setFilterType' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 79:24:  'setFilterStatus' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 80:26:  'setFilterSeverity' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 81:22:  'setFilterSite' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 82:23:  'setSearchQuery' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 83:16:  'setPage' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 84:23:  'setRowsPerPage' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 153:9:  'getTypeIcon' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 168:9:  'getStatusColor' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 182:9:  'getSeverityColor' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  Line 197:9:  'formatTimestamp' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 201:9:  'formatDuration' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+src/pages/ReportsPage.tsx
+  Line 20:10:  'useAuth' is defined but never used                     @typescript-eslint/no-unused-vars
+  Line 81:22:  'setFilterType' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 82:24:  'setFilterStatus' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 83:26:  'setFilterPriority' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 84:22:  'setFilterSite' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 85:23:  'setSearchQuery' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 86:16:  'setPage' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 87:23:  'setRowsPerPage' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 199:9:  'getTypeIcon' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 214:9:  'getStatusColor' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 231:9:  'getPriorityColor' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  Line 246:9:  'formatTimestamp' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 250:9:  'formatFileSize' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+src/pages/ServiceRequestsPage.tsx
+  Line 78:11:  'user' is assigned a value but never used              @typescript-eslint/no-unused-vars
+  Line 86:10:  'createDialogOpen' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 90:10:  'newRequest' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 90:22:  'setNewRequest' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 156:9:  'getStatusIcon' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 170:9:  'getStatusColor' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 186:9:  'getPriorityColor' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 201:9:  'formatCurrency' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 208:9:  'formatDuration' is assigned a value but never used    @typescript-eslint/no-unused-vars
+
+src/pages/SettingsPage.tsx
+  Line 42:10:  'useAuth' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/services/api.ts
+  Line 1:32:  'AxiosRequestConfig' is defined but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/pages/BillingPage.tsx
+  Line 22:3:    'Dialog' is defined but never used                      @typescript-eslint/no-unused-vars
+  Line 23:3:    'DialogTitle' is defined but never used                 @typescript-eslint/no-unused-vars
+  Line 24:3:    'DialogContent' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 25:3:    'DialogActions' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 39:10:   'useAuth' is defined but never used                     @typescript-eslint/no-unused-vars
+  Line 116:10:  'selectedInvoice' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 117:10:  'invoiceDialogOpen' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src/pages/DashboardPage.tsx
+  Line 65:11:  'AgentStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/pages/IncidentsPage.tsx
+  Line 20:10:  'useAuth' is defined but never used                     @typescript-eslint/no-unused-vars
+  Line 78:22:  'setFilterType' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 79:24:  'setFilterStatus' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 80:26:  'setFilterSeverity' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 81:22:  'setFilterSite' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 82:23:  'setSearchQuery' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 83:16:  'setPage' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 84:23:  'setRowsPerPage' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 153:9:  'getTypeIcon' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 168:9:  'getStatusColor' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 182:9:  'getSeverityColor' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  Line 197:9:  'formatTimestamp' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 201:9:  'formatDuration' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+src/pages/ReportsPage.tsx
+  Line 20:10:  'useAuth' is defined but never used                     @typescript-eslint/no-unused-vars
+  Line 81:22:  'setFilterType' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 82:24:  'setFilterStatus' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 83:26:  'setFilterPriority' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 84:22:  'setFilterSite' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  Line 85:23:  'setSearchQuery' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 86:16:  'setPage' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 87:23:  'setRowsPerPage' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 199:9:  'getTypeIcon' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 214:9:  'getStatusColor' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 231:9:  'getPriorityColor' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  Line 246:9:  'formatTimestamp' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 250:9:  'formatFileSize' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+src/pages/ServiceRequestsPage.tsx
+  Line 78:11:  'user' is assigned a value but never used              @typescript-eslint/no-unused-vars
+  Line 86:10:  'createDialogOpen' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 90:10:  'newRequest' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 90:22:  'setNewRequest' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 156:9:  'getStatusIcon' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 170:9:  'getStatusColor' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 186:9:  'getPriorityColor' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 201:9:  'formatCurrency' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 208:9:  'formatDuration' is assigned a value but never used    @typescript-eslint/no-unused-vars
+
+src/pages/SettingsPage.tsx
+  Line 42:10:  'useAuth' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/services/api.ts
+  Line 1:32:  'AxiosRequestConfig' is defined but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+ERROR in src/pages/monitoring/LiveMonitoringPage.tsx:27:67
+TS2307: Cannot find module '@react-google-maps/api' or its corresponding type declarations.
+    25 |   Fullscreen as FullscreenIcon,
+    26 | } from '@mui/icons-material';
+  > 27 | import { GoogleMap, LoadScript, Marker, InfoWindow, Circle } from '@react-google-maps/api';
+       |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+    28 | import { io, Socket } from 'socket.io-client';
+    29 |
+    30 | import { useAuth } from '../../hooks/useAuth';
+

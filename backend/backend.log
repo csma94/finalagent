@@ -1,0 +1,10 @@
+
+> bahinlink-backend@1.0.0 dev
+> ts-node-dev --respawn --transpile-only src/server.ts
+
+[INFO] 18:27:50 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 4.9.5)
+{"level":"info","message":"Registering API routes...","timestamp":"2025-07-10T18:27:50.739Z"}
+{"level":"info","message":"🚀 BahinLink Backend API is running on port 8000","timestamp":"2025-07-10T18:27:50.743Z"}
+{"level":"info","message":"📊 Health check: http://localhost:8000/health","timestamp":"2025-07-10T18:27:50.743Z"}
+{"level":"info","message":"🔧 API endpoints: http://localhost:8000/api","timestamp":"2025-07-10T18:27:50.743Z"}
+{"level":"info","message":"🌐 Environment: development","timestamp":"2025-07-10T18:27:50.743Z"}
