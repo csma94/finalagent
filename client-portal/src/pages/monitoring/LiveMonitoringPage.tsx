@@ -26,22 +26,17 @@ import {
 } from '@mui/icons-material';
 import { GoogleMap, LoadScript, Marker, InfoWindow, Circle } from '@react-google-maps/api';
 import { io, Socket } from 'socket.io-client';
-import winston from 'winston';
 
 import { useAuth } from '../../hooks/useAuth';
 import { clientPortalAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
-  transports: [
-    new winston.transports.Console()
-  ]
-});
+const logger = {
+  info: (message: string, ...args: any[]) => console.log(`[INFO] ${message}`, ...args),
+  error: (message: string, ...args: any[]) => console.error(`[ERROR] ${message}`, ...args),
+  warn: (message: string, ...args: any[]) => console.warn(`[WARN] ${message}`, ...args),
+  debug: (message: string, ...args: any[]) => console.debug(`[DEBUG] ${message}`, ...args),
+};
 
 interface AgentLocation {
   agentId: string;

@@ -31,7 +31,6 @@ import {
   StepLabel,
   StepContent,
 } from '@mui/material';
-import winston from 'winston';
 import {
   CalendarToday as CalendarIcon,
   AutoAwesome as OptimizeIcon,
@@ -70,16 +69,12 @@ try {
 
 const localizer = momentLocalizer(moment);
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
-  transports: [
-    new winston.transports.Console()
-  ]
-});
+const logger = {
+  info: (message: string, ...args: any[]) => console.log(`[INFO] ${message}`, ...args),
+  error: (message: string, ...args: any[]) => console.error(`[ERROR] ${message}`, ...args),
+  warn: (message: string, ...args: any[]) => console.warn(`[WARN] ${message}`, ...args),
+  debug: (message: string, ...args: any[]) => console.debug(`[DEBUG] ${message}`, ...args),
+};
 
 interface ScheduleRequirements {
   siteId: string;

@@ -25,7 +25,6 @@ import {
   Avatar,
   Divider,
 } from '@mui/material';
-import winston from 'winston';
 import {
   Refresh as RefreshIcon,
   Fullscreen as FullscreenIcon,
@@ -43,6 +42,13 @@ import { GoogleMap, LoadScript, Marker, InfoWindow, Circle, Polyline } from '@re
 import { useAuth } from '../../hooks/useAuth';
 import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import AgentTrackingMap from '../../components/maps/AgentTrackingMap';
+
+const createLogger = (level: string = 'info') => ({
+  info: (message: string, meta?: any) => console.log(`[INFO] ${message}`, meta || ''),
+  error: (message: string, meta?: any) => console.error(`[ERROR] ${message}`, meta || ''),
+  warn: (message: string, meta?: any) => console.warn(`[WARN] ${message}`, meta || ''),
+  debug: (message: string, meta?: any) => console.debug(`[DEBUG] ${message}`, meta || ''),
+});
 
 interface AgentLocation {
   id: string;
@@ -74,16 +80,7 @@ interface TrackingStats {
   siteCoverage: number;
 }
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
-  transports: [
-    new winston.transports.Console()
-  ]
-});
+const logger = createLogger('info');
 
 const LiveTrackingPage: React.FC = () => {
   const { user } = useAuth();

@@ -18,7 +18,6 @@ import {
   CheckCircle as CheckCircleIcon,
 } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import winston from 'winston';
 
 import { RootState, AppDispatch } from '../../store';
 import { fetchDashboardData } from '../../store/slices/dashboardSlice';
@@ -32,16 +31,12 @@ import AlertsCard from '../../components/dashboard/AlertsCard';
 import PerformanceChart from '../../components/dashboard/PerformanceChart';
 import LiveMapCard from '../../components/dashboard/LiveMapCard';
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
-  transports: [
-    new winston.transports.Console()
-  ]
-});
+const logger = {
+  info: (message: string, ...args: any[]) => console.log(`[INFO] ${message}`, ...args),
+  error: (message: string, ...args: any[]) => console.error(`[ERROR] ${message}`, ...args),
+  warn: (message: string, ...args: any[]) => console.warn(`[WARN] ${message}`, ...args),
+  debug: (message: string, ...args: any[]) => console.debug(`[DEBUG] ${message}`, ...args)
+};
 
 const DashboardPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

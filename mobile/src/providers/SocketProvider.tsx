@@ -2,8 +2,6 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { io, Socket } from 'socket.io-client';
 import { useSelector, useDispatch } from 'react-redux';
 import { Alert } from 'react-native';
-import winston from 'winston';
-
 import { RootState, AppDispatch } from '../store';
 import { addNotification } from '../store/slices/notificationsSlice';
 import { updateCurrentShift } from '../store/slices/shiftSlice';
@@ -24,16 +22,14 @@ interface SocketProviderProps {
   children: ReactNode;
 }
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
-  transports: [
-    new winston.transports.Console()
-  ]
-});
+const logger = {
+  info: (message: string, data?: any) => {
+    console.log(`[INFO] ${message}`, data ? JSON.stringify(data) : '');
+  },
+  error: (message: string, data?: any) => {
+    console.error(`[ERROR] ${message}`, data ? JSON.stringify(data) : '');
+  }
+};
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);

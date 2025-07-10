@@ -15,7 +15,7 @@ const logger = {
   warn: (message: string, ...args: any[]) => {
     console.warn(`[WARN] ${message}`, ...args);
   }
-};</type>
+};
 
 interface UseSocketOptions {
   autoConnect?: boolean;
