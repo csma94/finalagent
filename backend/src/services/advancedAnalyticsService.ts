@@ -141,17 +141,17 @@ export class AdvancedAnalyticsService {
 
       // Build dynamic SQL query based on parameters
       let sqlQuery = this.buildDynamicQuery(metrics, dimensions, filters, dateRange, groupBy, orderBy);
-      
+
       if (limit) {
         sqlQuery += ` LIMIT ${limit}`;
       }
-      
+
       if (offset) {
         sqlQuery += ` OFFSET ${offset}`;
       }
 
       const result = await this.prisma.$queryRawUnsafe(sqlQuery);
-      
+
       return {
         data: result,
         metadata: {
@@ -179,7 +179,7 @@ export class AdvancedAnalyticsService {
     const fromClause = this.determineTableFromMetrics(metrics);
     const whereClause = this.buildWhereClause(filters, dateRange);
     const groupByClause = groupBy && groupBy.length > 0 ? `GROUP BY ${groupBy.join(', ')}` : '';
-    const orderByClause = orderBy && orderBy.length > 0 
+    const orderByClause = orderBy && orderBy.length > 0
       ? `ORDER BY ${orderBy.map(o => `${o.field} ${o.direction.toUpperCase()}`).join(', ')}`
       : '';
 
@@ -189,7 +189,7 @@ export class AdvancedAnalyticsService {
   private determineTableFromMetrics(metrics: string[]): string {
     // Determine which tables to join based on requested metrics
     const tables = new Set<string>();
-    
+
     for (const metric of metrics) {
       if (metric.includes('shift') || metric.includes('agent')) {
         tables.add('Shift');
@@ -263,10 +263,10 @@ export class AdvancedAnalyticsService {
   private async generateDemandForecast(parameters: Record<string, any>): Promise<any> {
     // Simplified demand forecasting logic
     const historicalData = await this.getHistoricalDemandData(parameters);
-    
+
     // Apply ARIMA model (simplified)
     const forecast = this.applyARIMAModel(historicalData, parameters);
-    
+
     return {
       modelId: 'demand_forecast',
       forecast,
@@ -337,10 +337,10 @@ export class AdvancedAnalyticsService {
     // Simplified ARIMA implementation
     const trend = this.calculateTrend(data);
     const seasonality = this.calculateSeasonality(data, parameters.seasonality);
-    
+
     const forecast: Array<{ date: Date; value: number; confidence: number }> = [];
     const lookAhead = parameters.lookAhead || 30;
-    
+
     for (let i = 0; i < lookAhead; i++) {
       const value = trend + seasonality[i % seasonality.length] + Math.random() * 0.1;
       forecast.push({
@@ -356,7 +356,7 @@ export class AdvancedAnalyticsService {
   private applyIncidentPredictionModel(incidents: any[], parameters: Record<string, any>): any {
     // Simplified incident prediction
     const siteRiskScores = new Map<string, number>();
-    
+
     // Calculate risk scores based on historical data
     for (const incident of incidents) {
       const siteId = incident.siteId;
@@ -371,7 +371,7 @@ export class AdvancedAnalyticsService {
       timeWindow: string;
       confidence: number;
     }> = [];
-    
+
     for (const [siteId, riskScore] of siteRiskScores.entries()) {
       if (riskScore > (parameters.threshold || 0.7)) {
         predictions.push({
@@ -396,15 +396,15 @@ export class AdvancedAnalyticsService {
       action: string;
       impact: number;
     }> = [];
-    
+
     for (const site of sites) {
-      const siteAgents = agents.filter(agent => 
+      const siteAgents = agents.filter(agent =>
         agent.shifts.some((shift: any) => shift.siteId === site.id)
       );
-      
+
       const currentCount = siteAgents.length;
       const recommendedCount = Math.ceil(currentCount * (parameters.efficiency || 1.2));
-      
+
       if (recommendedCount !== currentCount) {
         recommendations.push({
           siteId: site.id,
@@ -448,7 +448,7 @@ export class AdvancedAnalyticsService {
 
   private calculateTrend(data: any[]): number {
     if (data.length < 2) return 0;
-    
+
     const firstValue = data[0].value;
     const lastValue = data[data.length - 1].value;
     return (lastValue - firstValue) / data.length;
@@ -457,7 +457,7 @@ export class AdvancedAnalyticsService {
   private calculateSeasonality(data: any[], period: string): number[] {
     const periodLength = period === 'weekly' ? 7 : period === 'monthly' ? 30 : 365;
     const seasonality = new Array(periodLength).fill(0);
-    
+
     for (let i = 0; i < data.length; i++) {
       const index = i % periodLength;
       seasonality[index] += data[i].value;
@@ -536,7 +536,7 @@ export class AdvancedAnalyticsService {
   // Export analytics data
   public async exportAnalytics(format: 'CSV' | 'PDF' | 'EXCEL', query: AdvancedAnalyticsQuery): Promise<Buffer> {
     const data = await this.executeAdvancedQuery(query);
-    
+
     switch (format) {
       case 'CSV':
         return this.exportToCSV(data);
@@ -569,10 +569,10 @@ export class AdvancedAnalyticsService {
 
   private convertToCSV(data: any[]): string {
     if (!data || data.length === 0) return '';
-    
+
     const headers = Object.keys(data[0]);
     const csvRows = [headers.join(',')];
-    
+
     for (const row of data) {
       const values = headers.map(header => {
         const value = row[header];
@@ -580,7 +580,7 @@ export class AdvancedAnalyticsService {
       });
       csvRows.push(values.join(','));
     }
-    
+
     return csvRows.join('\n');
   }
 
@@ -816,8 +816,8 @@ export class AdvancedAnalyticsService {
         name: agent.user.firstName + ' ' + agent.user.lastName,
         completedShifts: agent.shifts.filter(shift => shift.status === 'COMPLETED').length,
         totalShifts: agent.shifts.length,
-        performance: agent.shifts.length > 0 
-          ? (agent.shifts.filter(shift => shift.status === 'COMPLETED').length / agent.shifts.length) * 100 
+        performance: agent.shifts.length > 0
+          ? (agent.shifts.filter(shift => shift.status === 'COMPLETED').length / agent.shifts.length) * 100
           : 0,
       }));
     } catch (error) {
@@ -899,21 +899,12 @@ export class AdvancedAnalyticsService {
   }
 
   private async calculateRevenueMetrics(siteId?: string, dateRange?: { start: Date; end: Date }): Promise<any> {
-    try {
-      // This would integrate with actual billing/invoicing data
-      return {
-        totalRevenue: 0,
-        averageRevenuePerShift: 0,
-        revenueGrowth: 0,
-      };
-    } catch (error) {
-      logger.error('Error calculating revenue metrics:', error);
-      return {
-        totalRevenue: 0,
-        averageRevenuePerShift: 0,
-        revenueGrowth: 0,
-      };
-    }
+    // This would integrate with actual billing/invoicing data
+    return {
+      totalRevenue: 0,
+      averageRevenuePerShift: 0,
+      revenueGrowth: 0,
+    };
   }
 
   private async assessRisk(siteId?: string): Promise<Array<{
@@ -924,7 +915,7 @@ export class AdvancedAnalyticsService {
     confidence: number;
   }>> {
     try {
-      const sites = siteId 
+      const sites = siteId
         ? await this.prisma.site.findMany({ where: { id: siteId } })
         : await this.prisma.site.findMany();
 
@@ -965,7 +956,7 @@ export class AdvancedAnalyticsService {
     }>;
   }> {
     try {
-      const sites = siteId 
+      const sites = siteId
         ? await this.prisma.site.findMany({ where: { id: siteId } })
         : await this.prisma.site.findMany();
 
@@ -983,7 +974,7 @@ export class AdvancedAnalyticsService {
       for (const site of sites) {
         // Count agents assigned to this site through shifts
         const shifts = await this.prisma.shift.findMany({
-          where: { 
+          where: {
             siteId: site.id,
             status: 'IN_PROGRESS' as any
           },

@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { PrismaClient } from '@prisma/client';
 import { notificationService } from './notificationService';
+import { logger } from '../utils/logger';
 
 const prisma = new PrismaClient();
 
@@ -124,7 +125,10 @@ export class GeofencingService {
       let coordinates: GeoCoordinate[] = [];
       try {
         coordinates = JSON.parse(JSON.stringify(zone.coordinates));
-      } catch {}
+      } catch (error) {
+        logger.error('Error parsing zone coordinates:', error);
+        continue;
+      }
       const isInside = this.isPointInPolygon(location, coordinates);
       const wasInside = this.wasAgentInZone(agentId, zoneId);
       if (isInside && !wasInside) {
@@ -216,11 +220,11 @@ export class GeofencingService {
 
   public async getAgentLocations(): Promise<Array<{ agentId: string; location: GeoCoordinate }>> {
     const locations: Array<{ agentId: string; location: GeoCoordinate }> = [];
-    
+
     for (const [agentId, location] of this.agentLocations) {
       locations.push({ agentId, location });
     }
-    
+
     return locations;
   }
 
@@ -305,7 +309,7 @@ export class GeofencingService {
     updates: Partial<{ name: string; coordinates: any; isActive: boolean }>
   ): Promise<GeofenceZone> {
     const updateData: any = {};
-    
+
     if (updates.name !== undefined) updateData.name = updates.name;
     if (updates.coordinates !== undefined) updateData.coordinates = updates.coordinates;
     if (updates.isActive !== undefined) updateData.isActive = updates.isActive;
@@ -324,7 +328,7 @@ export class GeofencingService {
     await prisma.geofenceZone.delete({
       where: { id: zoneId }
     });
-    
+
     this.zones.delete(zoneId);
   }
 
@@ -341,7 +345,7 @@ export class GeofencingService {
     limit: number = 100
   ): Promise<Array<{ agentId: string; latitude: number; longitude: number; accuracy: number; timestamp: Date; speed: number | null; heading: number | null }>> {
     const where = agentId ? { agentId } : {};
-    
+
     const locations = await prisma.locationUpdate.findMany({
       where,
       orderBy: { timestamp: 'desc' },

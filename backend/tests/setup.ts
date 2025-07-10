@@ -1,32 +1,36 @@
 import { PrismaClient } from '@prisma/client';
 import { beforeAll, afterAll } from '@jest/globals';
+import dotenv from 'dotenv';
 
-// Global test setup
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.TEST_DATABASE_URL || 'postgresql://test:test@localhost:5432/bahinlink_test',
-    },
-  },
-});
+// Load environment variables
+dotenv.config();
+
+// Global test setup - use the real Prisma Accelerate database
+const prisma = new PrismaClient();
 
 beforeAll(async () => {
-  // Connect to test database
+  // Connect to database
   await prisma.$connect();
   
-  // Run migrations
-  const { execSync } = require('child_process');
-  execSync('npx prisma migrate deploy', {
-    env: {
-      ...process.env,
-      DATABASE_URL: process.env.TEST_DATABASE_URL || 'postgresql://test:test@localhost:5432/bahinlink_test',
-    },
-  });
+  // Note: We're using the real database, so we don't run migrations here
+  // The database should already be set up and migrated
 });
 
 afterAll(async () => {
-  // Clean up test database
-  await prisma.$executeRaw`TRUNCATE TABLE "User", "Agent", "Client", "Site", "Shift", "Report", "Incident", "Notification" RESTART IDENTITY CASCADE`;
+  // Clean up test data (only delete test records, not truncate entire tables)
+  try {
+    // Delete test users and related data
+    await prisma.user.deleteMany({
+      where: {
+        email: {
+          contains: 'test@example.com'
+        }
+      }
+    });
+  } catch (error) {
+    console.warn('Cleanup warning:', error);
+  }
+  
   await prisma.$disconnect();
 });
 

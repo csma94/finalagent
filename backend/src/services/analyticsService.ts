@@ -344,21 +344,12 @@ export class AnalyticsService {
   }
 
   private async calculateRevenueMetrics(query: AnalyticsQuery): Promise<any> {
-    try {
-      // This would integrate with actual billing/invoicing data
-      return {
-        totalRevenue: 0,
-        averageRevenuePerShift: 0,
-        revenueGrowth: 0,
-      };
-    } catch (error) {
-      logger.error('Error calculating revenue metrics:', error);
-      return {
-        totalRevenue: 0,
-        averageRevenuePerShift: 0,
-        revenueGrowth: 0,
-      };
-    }
+    // This would integrate with actual billing/invoicing data
+    return {
+      totalRevenue: 0,
+      averageRevenuePerShift: 0,
+      revenueGrowth: 0,
+    };
   }
 
   private calculateAverageShiftDuration(shifts: any[]): number {
