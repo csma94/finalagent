@@ -217,7 +217,7 @@ const ReportTemplates: React.FC<ReportTemplatesProps> = ({
 
         <View style={styles.searchContainer}>
           <Searchbar
-            placeholder="Search templates..."
+            placeholder="Search by template name, description, or tags"
             onChangeText={setSearchQuery}
             value={searchQuery}
             style={styles.searchbar}

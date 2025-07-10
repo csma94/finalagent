@@ -1,5 +1,18 @@
 const { PrismaClient } = require('@prisma/client');
+const winston = require('winston');
 // Note: bcrypt removed - authentication now handled by Clerk
+
+// Create logger instance
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
 
 // Test database setup
 const prisma = new PrismaClient({
@@ -304,7 +317,7 @@ async function seedTestData() {
     },
   });
 
-  console.log('Test data seeded successfully');
+  logger.info('Test data seeded successfully');
 }
 
 // Export for use in tests

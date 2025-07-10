@@ -21,7 +21,7 @@ const config = {
   CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY,
 
   // Encryption (for general data encryption, not authentication)
-  ENCRYPTION_KEY: process.env.ENCRYPTION_KEY || 'your-32-byte-encryption-key-here',
+  ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
 
   // CORS
   CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:3001',
@@ -68,7 +68,6 @@ const config = {
   NEW_RELIC_LICENSE_KEY: process.env.NEW_RELIC_LICENSE_KEY,
 
   // Development/Testing
-  MOCK_EXTERNAL_SERVICES: process.env.MOCK_EXTERNAL_SERVICES === 'true',
   ENABLE_API_DOCS: process.env.ENABLE_API_DOCS === 'true',
   ENABLE_PRISMA_STUDIO: process.env.ENABLE_PRISMA_STUDIO === 'true',
 
@@ -108,20 +107,31 @@ const config = {
     const required = [
       'DATABASE_URL',
       'CLERK_SECRET_KEY',
+      'ENCRYPTION_KEY',
+      'AWS_ACCESS_KEY_ID',
+      'AWS_SECRET_ACCESS_KEY',
+      'GOOGLE_MAPS_API_KEY',
+      'TWILIO_ACCOUNT_SID',
+      'TWILIO_AUTH_TOKEN',
+      'SENDGRID_API_KEY'
     ];
 
-    const missing = required.filter(key => !this[key]);
+    const missing = required.filter(key => !this[key] || 
+      (typeof this[key] === 'string' && (
+        this[key].includes('your-') || 
+        this[key].includes('example') ||
+        this[key] === 'your-32-byte-encryption-key-here'
+      ))
+    );
 
     if (missing.length > 0) {
-      throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
+      throw new Error(`Missing or placeholder environment variables: ${missing.join(', ')}`);
     }
 
-    // Validate Clerk secret key format
     if (this.CLERK_SECRET_KEY && !this.CLERK_SECRET_KEY.startsWith('sk_')) {
       throw new Error('CLERK_SECRET_KEY must start with "sk_"');
     }
 
-    // Validate encryption key length
     if (this.ENCRYPTION_KEY && this.ENCRYPTION_KEY.length < 32) {
       throw new Error('ENCRYPTION_KEY must be at least 32 characters long');
     }

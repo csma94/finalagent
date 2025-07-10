@@ -183,9 +183,17 @@ export class NotificationService extends EventEmitter {
     }
 
     if (channels.includes('PUSH') && recipient.notificationSettings?.pushNotifications) {
-      const deviceTokens: string[] = []; // TODO: Implement device token retrieval
+      const deviceTokens = await prisma.deviceToken.findMany({
+        where: { 
+          userId: recipient.id,
+          isActive: true 
+        },
+        select: { token: true }
+      });
+      
       if (deviceTokens.length > 0) {
-        deliveryPromises.push(this.sendPushNotification(notification, deviceTokens));
+        const tokens = deviceTokens.map(dt => dt.token);
+        deliveryPromises.push(this.sendPushNotification(notification, tokens));
       }
     }
 
@@ -303,8 +311,7 @@ export class NotificationService extends EventEmitter {
         },
       };
 
-      // TODO: Implement push notification service
-      // await pushNotificationService.send(deviceTokens, pushData);
+      await integrationService.sendPushNotification(deviceTokens, pushData);
 
       await prisma.notificationDelivery.create({
         data: {

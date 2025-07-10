@@ -1,6 +1,18 @@
 const AWS = require('aws-sdk');
 const config = require('../../../src/config/config');
 const crypto = require('crypto');
+const winston = require('winston');
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console({ silent: process.env.NODE_ENV === 'test' })
+  ]
+});
 
 describe('AWS S3 Integration Tests', () => {
   let s3Client;
@@ -9,7 +21,7 @@ describe('AWS S3 Integration Tests', () => {
   beforeAll(() => {
     // Skip tests if AWS credentials are not configured
     if (!config.AWS_ACCESS_KEY_ID || !config.AWS_SECRET_ACCESS_KEY || !testBucket) {
-      console.log('Skipping AWS S3 tests - credentials or bucket not configured');
+      logger.info('Skipping AWS S3 tests - credentials or bucket not configured');
       return;
     }
 
@@ -105,7 +117,7 @@ describe('AWS S3 Integration Tests', () => {
               Key: key,
             }).promise();
           } catch (error) {
-            console.warn(`Failed to clean up test file ${key}:`, error.message);
+            logger.warn(`Failed to clean up test file ${key}:`, error.message);
           }
         }
         testFiles.length = 0;
@@ -217,7 +229,7 @@ describe('AWS S3 Integration Tests', () => {
           ContentType: 'text/plain',
         }).promise();
       } catch (error) {
-        console.warn('Failed to setup download test file:', error.message);
+        logger.warn('Failed to setup download test file:', error.message);
       }
     });
 
@@ -229,7 +241,7 @@ describe('AWS S3 Integration Tests', () => {
             Key: testKey,
           }).promise();
         } catch (error) {
-          console.warn('Failed to clean up download test file:', error.message);
+          logger.warn('Failed to clean up download test file:', error.message);
         }
       }
     });
@@ -294,7 +306,7 @@ describe('AWS S3 Integration Tests', () => {
           ContentType: 'text/plain',
         }).promise();
       } catch (error) {
-        console.warn('Failed to setup management test file:', error.message);
+        logger.warn('Failed to setup management test file:', error.message);
       }
     });
 
@@ -489,7 +501,7 @@ describe('AWS S3 Integration Tests', () => {
       const missingVars = requiredVars.filter(varName => !process.env[varName]);
       
       if (missingVars.length > 0) {
-        console.warn(`Missing AWS configuration: ${missingVars.join(', ')}`);
+        logger.warn(`Missing AWS configuration: ${missingVars.join(', ')}`);
       }
 
       // Validate format of configured values

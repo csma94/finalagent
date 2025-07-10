@@ -605,9 +605,43 @@ class AvailabilityManagementService {
   }
 
   async calculateDistanceToSite(agentId, siteId) {
-    // This would calculate distance between agent location and site
-    // For now, return a placeholder value
-    return Math.random() * 50; // Random distance up to 50km
+    const geolib = require('geolib');
+    
+    const agent = await this.prisma.agent.findUnique({
+      where: { id: agentId },
+      include: { 
+        user: { 
+          include: { 
+            locationTracking: { 
+              orderBy: { timestamp: 'desc' }, 
+              take: 1 
+            } 
+          } 
+        } 
+      }
+    });
+    
+    const site = await this.prisma.site.findUnique({
+      where: { id: siteId }
+    });
+    
+    if (!agent?.user?.locationTracking?.[0] || !site?.coordinates) {
+      throw new Error('Unable to calculate distance: missing location data');
+    }
+    
+    const agentLocation = {
+      latitude: agent.user.locationTracking[0].latitude,
+      longitude: agent.user.locationTracking[0].longitude
+    };
+    
+    const coordsMatch = site.coordinates.match(/POINT\(([^)]+)\)/);
+    if (!coordsMatch) {
+      throw new Error('Invalid site coordinates format');
+    }
+    const [lng, lat] = coordsMatch[1].split(' ').map(Number);
+    const siteLocation = { latitude: lat, longitude: lng };
+    
+    return geolib.getDistance(agentLocation, siteLocation) / 1000;
   }
 
   async calculateAgentAvailabilityMetrics(agent, startDate, endDate) {

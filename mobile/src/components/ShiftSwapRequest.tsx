@@ -266,7 +266,7 @@ const ShiftSwapRequest: React.FC<ShiftSwapRequestProps> = ({
                 mode="outlined"
                 multiline
                 numberOfLines={3}
-                placeholder="e.g., Personal emergency, medical appointment, family commitment..."
+                placeholder="Provide a clear reason for requesting this shift swap (e.g., medical appointment, family emergency, personal commitment)"
                 style={styles.reasonInput}
               />
             </Card.Content>

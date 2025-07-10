@@ -95,6 +95,12 @@ const initializeSocketIO = (io, prisma) => {
           return;
         }
 
+        // Validate GPS coordinates
+        if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+          socket.emit('error', { message: 'Invalid GPS coordinates' });
+          return;
+        }
+
         // Store location in database
         await prisma.locationTracking.create({
           data: {
@@ -103,7 +109,6 @@ const initializeSocketIO = (io, prisma) => {
             accuracy: accuracy || null,
             timestamp: new Date(timestamp),
             batteryLevel: batteryLevel || null,
-            isMockLocation: false, // TODO: Implement mock location detection
           },
         });
 

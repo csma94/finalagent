@@ -40,6 +40,12 @@ import {
 import { useClerk } from '@clerk/clerk-react';
 import { useAuth } from '../../hooks/useAuth';
 
+const logger = {
+  info: (message: string, data?: any) => console.info(`[UserAdministration] ${message}`, data),
+  error: (message: string, error?: any) => console.error(`[UserAdministration] ${message}`, error),
+  warn: (message: string, data?: any) => console.warn(`[UserAdministration] ${message}`, data),
+};
+
 interface ClerkUser {
   id: string;
   firstName: string | null;
@@ -112,7 +118,7 @@ export const UserAdministration: React.FC = () => {
       const data = await response.json();
       setUsers(data.users || []);
     } catch (error: any) {
-      console.error('Failed to load users:', error);
+      logger.error('Failed to load users:', error);
       setError('Failed to load users. Please try again.');
 
       // No fallback data - show empty state with error message
@@ -135,7 +141,7 @@ export const UserAdministration: React.FC = () => {
 
   const handleEditUser = (user: ClerkUser) => {
     // Implement user editing logic
-    console.log('Edit user:', user);
+    logger.info('Edit user:', user);
     handleMenuClose();
   };
 
@@ -145,7 +151,7 @@ export const UserAdministration: React.FC = () => {
     try {
       // Note: Implement actual ban/unban logic using Clerk's API
       const action = user.banned ? 'unban' : 'ban';
-      console.log(`${action} user:`, user);
+      logger.info(`${action} user:`, user);
       
       // Update local state
       setUsers(prev => prev.map(u => 
@@ -171,7 +177,7 @@ export const UserAdministration: React.FC = () => {
 
     try {
       // Note: Implement actual user deletion using Clerk's API
-      console.log('Delete user:', userToDelete);
+      logger.info('Delete user:', userToDelete);
       
       // Update local state
       setUsers(prev => prev.filter(u => u.id !== userToDelete.id));
@@ -230,7 +236,7 @@ export const UserAdministration: React.FC = () => {
           <Button
             startIcon={<AddIcon />}
             variant="contained"
-            onClick={() => console.log('Add new user')}
+            onClick={() => logger.info('Add new user')}
           >
             Add User
           </Button>
@@ -251,7 +257,7 @@ export const UserAdministration: React.FC = () => {
         {/* Filters */}
         <Box display="flex" gap={2} mb={3}>
           <TextField
-            placeholder="Search users..."
+            placeholder="Enter name, username, or email address to search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             InputProps={{

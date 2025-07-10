@@ -1,17 +1,21 @@
 import React from 'react';
-import { Box, Typography, Card, CardContent } from '@mui/material';
-import { Construction as ConstructionIcon } from '@mui/icons-material';
+import { Box, Typography, Card, CardContent, Button } from '@mui/material';
+import { Warning as WarningIcon } from '@mui/icons-material';
 
 interface PlaceholderPageProps {
   title: string;
   description?: string;
   icon?: React.ReactNode;
+  actionText?: string;
+  onAction?: () => void;
 }
 
 const PlaceholderPage: React.FC<PlaceholderPageProps> = ({ 
   title, 
-  description = 'This page is under development and will be available soon.',
-  icon = <ConstructionIcon />
+  description = 'This feature requires additional configuration or data to be displayed.',
+  icon = <WarningIcon />,
+  actionText,
+  onAction
 }) => {
   return (
     <Box>
@@ -38,8 +42,8 @@ const PlaceholderPage: React.FC<PlaceholderPageProps> = ({
                 width: 80,
                 height: 80,
                 borderRadius: '50%',
-                backgroundColor: 'primary.light',
-                color: 'primary.main',
+                backgroundColor: 'warning.light',
+                color: 'warning.main',
                 mb: 3,
               }}
             >
@@ -50,9 +54,15 @@ const PlaceholderPage: React.FC<PlaceholderPageProps> = ({
               {title}
             </Typography>
             
-            <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 400 }}>
+            <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 400, mb: 3 }}>
               {description}
             </Typography>
+
+            {actionText && onAction && (
+              <Button variant="contained" onClick={onAction}>
+                {actionText}
+              </Button>
+            )}
           </Box>
         </CardContent>
       </Card>

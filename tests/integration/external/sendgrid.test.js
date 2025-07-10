@@ -1,11 +1,23 @@
 const sgMail = require('@sendgrid/mail');
 const config = require('../../../src/config/config');
+const winston = require('winston');
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
 
 describe('SendGrid Integration Tests', () => {
   beforeAll(() => {
     // Skip tests if SendGrid API key is not configured
     if (!config.SENDGRID_API_KEY) {
-      console.log('Skipping SendGrid tests - API key not configured');
+      logger.info('Skipping SendGrid tests - API key not configured');
       return;
     }
 
@@ -64,7 +76,7 @@ describe('SendGrid Integration Tests', () => {
         }
       } catch (error) {
         // Sender verification might not be available in all plans
-        console.warn(`Sender verification check failed: ${error.message}`);
+        logger.warn(`Sender verification check failed: ${error.message}`);
       }
     }, 10000);
   });
@@ -269,7 +281,7 @@ describe('SendGrid Integration Tests', () => {
         expect(Array.isArray(response[0].body.messages)).toBe(true);
       } catch (error) {
         // Email activity API might not be available in all plans
-        console.warn(`Email activity retrieval failed: ${error.message}`);
+        logger.warn(`Email activity retrieval failed: ${error.message}`);
       }
     }, 10000);
   });
@@ -378,7 +390,7 @@ describe('SendGrid Integration Tests', () => {
       const missingVars = requiredVars.filter(varName => !process.env[varName]);
       
       if (missingVars.length > 0) {
-        console.warn(`Missing SendGrid configuration: ${missingVars.join(', ')}`);
+        logger.warn(`Missing SendGrid configuration: ${missingVars.join(', ')}`);
       }
 
       // Validate format of configured values

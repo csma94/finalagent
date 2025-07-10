@@ -1,5 +1,17 @@
 const twilio = require('twilio');
 const config = require('../../../src/config/config');
+const winston = require('winston');
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
 
 describe('Twilio Integration Tests', () => {
   let twilioClient;
@@ -7,7 +19,7 @@ describe('Twilio Integration Tests', () => {
   beforeAll(() => {
     // Skip tests if Twilio credentials are not configured
     if (!config.TWILIO_ACCOUNT_SID || !config.TWILIO_AUTH_TOKEN) {
-      console.log('Skipping Twilio tests - credentials not configured');
+      logger.info('Skipping Twilio tests - credentials not configured');
       return;
     }
 
@@ -288,7 +300,7 @@ describe('Twilio Integration Tests', () => {
       const missingVars = requiredVars.filter(varName => !process.env[varName]);
       
       if (missingVars.length > 0) {
-        console.warn(`Missing Twilio configuration: ${missingVars.join(', ')}`);
+        logger.warn(`Missing Twilio configuration: ${missingVars.join(', ')}`);
       }
 
       // Validate format of configured values

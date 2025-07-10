@@ -452,7 +452,7 @@ const AuditLogsPage: React.FC = () => {
 
         <TextField
           size="small"
-          placeholder="Search logs..."
+          placeholder="Search by action, table name, or user email"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           InputProps={{

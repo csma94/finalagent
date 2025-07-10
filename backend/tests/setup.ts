@@ -39,32 +39,11 @@ process.env.JWT_SECRET = 'test-jwt-secret';
 process.env.CLERK_SECRET_KEY = 'test-clerk-secret';
 process.env.NODE_ENV = 'test';
 
-// Mock external services
-jest.mock('../src/services/integrationService', () => ({
-  integrationService: {
-    sendEmail: jest.fn().mockResolvedValue({ messageId: 'test-message-id' }),
-    sendSMS: jest.fn().mockResolvedValue({ messageId: 'test-sms-id' }),
-    sendPushNotification: jest.fn().mockResolvedValue({ success: 1, failure: 0 }),
-    sendWebhook: jest.fn().mockResolvedValue({}),
-    getWeatherData: jest.fn().mockResolvedValue({
-      temperature: 22,
-      condition: 'Clear',
-      description: 'Clear sky',
-    }),
-    reverseGeocode: jest.fn().mockResolvedValue({
-      address: '123 Test Street, Test City, TC 12345',
-      components: [],
-      placeId: 'test-place-id',
-    }),
-    uploadFile: jest.fn().mockResolvedValue({
-      url: 'https://test-bucket.s3.amazonaws.com/test-file.jpg',
-      key: 'test-file.jpg',
-      bucket: 'test-bucket',
-    }),
-    notifyEmergencyServices: jest.fn().mockResolvedValue({}),
-    sendAnalyticsEvent: jest.fn().mockResolvedValue({}),
-  },
-}));
+// Configure test environment to use sandbox/test endpoints for external services
+process.env.TWILIO_ACCOUNT_SID = process.env.TWILIO_TEST_ACCOUNT_SID || process.env.TWILIO_ACCOUNT_SID;
+process.env.SENDGRID_API_KEY = process.env.SENDGRID_TEST_API_KEY || process.env.SENDGRID_API_KEY;
+process.env.AWS_S3_BUCKET = process.env.AWS_S3_TEST_BUCKET || 'bahinlink-test-media';
+process.env.FIREBASE_PROJECT_ID = process.env.FIREBASE_TEST_PROJECT_ID || 'bahinlink-test';
 
 // Global test utilities
 global.testUtils = {
