@@ -1,5 +1,17 @@
 const fs = require('fs');
 const path = require('path');
+const winston = require('winston');
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
 
 // Get all TypeScript files in src directory
 function getAllTsFiles(dir) {
@@ -41,9 +53,9 @@ function fixUnusedParams(filePath) {
 const srcDir = path.join(__dirname, 'src');
 const tsFiles = getAllTsFiles(srcDir);
 
-console.log(`Found ${tsFiles.length} TypeScript files`);
+logger.info(`Found ${tsFiles.length} TypeScript files`);
 
 // For now, just list the files - manual fixing is more reliable
 tsFiles.forEach(file => {
-  console.log(file);
+  logger.info(file);
 });

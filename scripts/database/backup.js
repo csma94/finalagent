@@ -493,28 +493,28 @@ if (require.main === module) {
     case 'create':
       backupManager.createBackup(options)
         .then((result) => {
-          console.log('Backup created successfully:', result);
+          logger.info('Backup created successfully:', result);
           process.exit(0);
         })
         .catch((error) => {
-          console.error('Backup failed:', error.message);
+          logger.error('Backup failed:', error.message);
           process.exit(1);
         });
       break;
 
     case 'restore':
       if (!options.file) {
-        console.error('Restore requires --file option');
+        logger.error('Restore requires --file option');
         process.exit(1);
       }
       
       backupManager.restoreBackup(options.file, options)
         .then((result) => {
-          console.log('Restore completed successfully:', result);
+          logger.info('Restore completed successfully:', result);
           process.exit(0);
         })
         .catch((error) => {
-          console.error('Restore failed:', error.message);
+          logger.error('Restore failed:', error.message);
           process.exit(1);
         });
       break;
@@ -522,23 +522,23 @@ if (require.main === module) {
     case 'list':
       backupManager.listBackups()
         .then((backups) => {
-          console.log('Available backups:');
+          logger.info('Available backups:');
           backups.forEach((backup, index) => {
-            console.log(`${index + 1}. ${backup.filename} (${backup.size} bytes, ${backup.created})`);
+            logger.info(`${index + 1}. ${backup.filename} (${backup.size} bytes, ${backup.created})`);
           });
           process.exit(0);
         })
         .catch((error) => {
-          console.error('Failed to list backups:', error.message);
+          logger.error('Failed to list backups:', error.message);
           process.exit(1);
         });
       break;
 
     default:
-      console.log('Usage:');
-      console.log('  node backup.js create [--no-compress] [--schema-only] [--data-only] [--name <name>]');
-      console.log('  node backup.js restore --file <backup-file> [--force]');
-      console.log('  node backup.js list');
+      logger.info('Usage:');
+      logger.info('  node backup.js create [--no-compress] [--schema-only] [--data-only] [--name <name>]');
+      logger.info('  node backup.js restore --file <backup-file> [--force]');
+      logger.info('  node backup.js list');
       process.exit(1);
   }
 }

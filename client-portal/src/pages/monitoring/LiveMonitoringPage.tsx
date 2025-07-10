@@ -26,10 +26,22 @@ import {
 } from '@mui/icons-material';
 import { GoogleMap, LoadScript, Marker, InfoWindow, Circle } from '@react-google-maps/api';
 import { io, Socket } from 'socket.io-client';
+import winston from 'winston';
 
 import { useAuth } from '../../hooks/useAuth';
 import { clientPortalAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
 
 interface AgentLocation {
   agentId: string;
@@ -77,7 +89,7 @@ const LiveMonitoringPage: React.FC = () => {
     });
 
     newSocket.on('connect', () => {
-      console.log('Connected to client monitoring socket');
+      logger.info('Connected to client monitoring socket');
       newSocket.emit('join_client_monitoring', { clientId: user?.id });
     });
 
@@ -146,7 +158,7 @@ const LiveMonitoringPage: React.FC = () => {
         setMapCenter({ lat: avgLat, lng: avgLng });
       }
     } catch (error) {
-      console.error('Failed to load monitoring data:', error);
+      logger.error('Failed to load monitoring data:', error);
     } finally {
       setIsLoading(false);
     }

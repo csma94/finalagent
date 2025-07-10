@@ -368,7 +368,8 @@ class AnalyticsEngine {
 
   public async createDashboard(dashboard: Omit<Dashboard, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
     try {
-      const dashboardId = `dashboard_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const crypto = require('crypto');
+      const dashboardId = `dashboard_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
       
       const newDashboard: Dashboard = {
         ...dashboard,

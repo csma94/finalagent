@@ -249,7 +249,7 @@ class AnalyticsEngine {
     }
     async createDashboard(dashboard) {
         try {
-            const dashboardId = `dashboard_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            const dashboardId = `dashboard_${Date.now()}_${require('crypto').randomBytes(5).toString('hex')}`;
             const newDashboard = {
                 ...dashboard,
                 id: dashboardId,

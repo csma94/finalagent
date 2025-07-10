@@ -10,6 +10,17 @@ import {
   isSessionValid,
 } from '../utils/sessionManager';
 
+const logger = {
+  info: (message: string) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[SessionProvider] ${message}`);
+    }
+  },
+  error: (message: string, error?: any) => {
+    console.error(`[SessionProvider] ${message}`, error);
+  }
+};
+
 interface SessionProviderProps {
   children: React.ReactNode;
 }
@@ -65,13 +76,13 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
 
   // Token refresh handler
   const handleTokenRefresh = useCallback((token: string) => {
-    console.log('Token refreshed successfully');
+    logger.info('Token refreshed successfully');
     // Token is automatically managed by Clerk, no additional action needed
   }, []);
 
   // Token refresh error handler
   const handleTokenError = useCallback((error: Error) => {
-    console.error('Token refresh failed:', error);
+    logger.error('Token refresh failed:', error);
     dispatch(setClerkError('Session expired. Please sign in again.'));
     clearStoredSessionData();
   }, [dispatch]);
@@ -102,10 +113,10 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
     const handleVisibilityChange = () => {
       if (document.hidden) {
         // Page is hidden, user might be inactive
-        console.log('Page hidden - pausing activity tracking');
+        logger.info('Page hidden - pausing activity tracking');
       } else {
         // Page is visible again, resume activity tracking
-        console.log('Page visible - resuming activity tracking');
+        logger.info('Page visible - resuming activity tracking');
         if (session && isSessionValid(session)) {
           storeSessionData(session);
         }

@@ -508,7 +508,7 @@ const CustomReportsPage: React.FC = () => {
 
         <TextField
           size="small"
-          placeholder="Search reports..."
+          placeholder="Enter report name or description to search"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           InputProps={{

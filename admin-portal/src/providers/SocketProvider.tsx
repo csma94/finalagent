@@ -2,6 +2,17 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { useAppSelector } from '../store';
 import { useAuth as useClerkAuth } from '@clerk/clerk-react';
+
+const logger = {
+  info: (message: string, ...args: any[]) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[SocketProvider] ${message}`, ...args);
+    }
+  },
+  error: (message: string, ...args: any[]) => {
+    console.error(`[SocketProvider] ${message}`, ...args);
+  }
+};
 type Socket = any;
 
 interface SocketContextType {
@@ -46,24 +57,24 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
           });
 
           newSocket.on('connect', () => {
-            console.log('Socket connected');
+            logger.info('Socket connected');
             setIsConnected(true);
           });
 
           newSocket.on('disconnect', () => {
-            console.log('Socket disconnected');
+            logger.info('Socket disconnected');
             setIsConnected(false);
           });
 
           newSocket.on('connect_error', (error: any) => {
-            console.error('Socket connection error:', error);
+            logger.error('Socket connection error:', error);
             setIsConnected(false);
           });
 
           setSocket(newSocket);
         }
       }).catch((error) => {
-        console.error('Failed to get Clerk token:', error);
+        logger.error('Failed to get Clerk token:', error);
       });
     } else {
       // Clean up socket if not signed in

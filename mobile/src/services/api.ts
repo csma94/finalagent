@@ -2,6 +2,24 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 
+const logger = {
+  info: (message: string, ...args: any[]) => {
+    if (__DEV__) {
+      console.log(`[INFO] ${message}`, ...args);
+    }
+  },
+  error: (message: string, ...args: any[]) => {
+    if (__DEV__) {
+      console.error(`[ERROR] ${message}`, ...args);
+    }
+  },
+  warn: (message: string, ...args: any[]) => {
+    if (__DEV__) {
+      console.warn(`[WARN] ${message}`, ...args);
+    }
+  }
+};
+
 // API Configuration
 const API_BASE_URL = __DEV__ 
   ? 'http://localhost:3001/api' 
@@ -43,12 +61,12 @@ apiClient.interceptors.request.use(
     // Add request timestamp for debugging
     config.metadata = { startTime: new Date() };
 
-    console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+    logger.info(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`);
     
     return config;
   },
   (error) => {
-    console.error('❌ API Request Error:', error);
+    logger.error('❌ API Request Error:', error);
     return Promise.reject(error);
   }
 );
@@ -57,7 +75,7 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     const duration = new Date().getTime() - response.config.metadata?.startTime?.getTime();
-    console.log(`✅ API Response: ${response.config.method?.toUpperCase()} ${response.config.url} (${duration}ms)`);
+    logger.info(`✅ API Response: ${response.config.method?.toUpperCase()} ${response.config.url} (${duration}ms)`);
     
     return response;
   },
@@ -66,7 +84,7 @@ apiClient.interceptors.response.use(
       ? new Date().getTime() - error.config.metadata.startTime.getTime()
       : 0;
     
-    console.error(`❌ API Error: ${error.config?.method?.toUpperCase()} ${error.config?.url} (${duration}ms)`, error.response?.data);
+    logger.error(`❌ API Error: ${error.config?.method?.toUpperCase()} ${error.config?.url} (${duration}ms)`, error.response?.data);
 
     // Handle specific error cases
     if (error.response?.status === 401) {
@@ -101,9 +119,9 @@ const handleUnauthorized = async () => {
     setAuthToken(null);
     
     // Note: Navigation to login should be handled by the auth slice
-    console.log('🔐 User unauthorized - tokens cleared');
+    logger.info('🔐 User unauthorized - tokens cleared');
   } catch (error) {
-    console.error('Error clearing auth tokens:', error);
+    logger.error('Error clearing auth tokens:', error);
   }
 };
 

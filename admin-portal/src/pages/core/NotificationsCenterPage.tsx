@@ -564,7 +564,7 @@ const NotificationsCenterPage: React.FC = () => {
 
             <TextField
               size="small"
-              placeholder="Search notifications..."
+              placeholder="Enter keywords to filter notifications by title or content"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               InputProps={{

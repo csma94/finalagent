@@ -253,7 +253,7 @@ class WebSocketService {
       // Create message object
       const message: WebSocketMessage = {
         ...data,
-        id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: `msg_${Date.now()}_${user.id.slice(-4)}_${socket.id.slice(-4)}`,
         senderId: user.id,
         timestamp: new Date(),
       };

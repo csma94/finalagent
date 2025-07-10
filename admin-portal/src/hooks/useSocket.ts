@@ -1,6 +1,21 @@
 import { useEffect, useRef } from 'react';
 import io from 'socket.io-client';
+
 type Socket = any;
+
+const logger = {
+  info: (message: string, ...args: any[]) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[INFO] ${message}`, ...args);
+    }
+  },
+  error: (message: string, ...args: any[]) => {
+    console.error(`[ERROR] ${message}`, ...args);
+  },
+  warn: (message: string, ...args: any[]) => {
+    console.warn(`[WARN] ${message}`, ...args);
+  }
+};</type>
 
 interface UseSocketOptions {
   autoConnect?: boolean;
@@ -33,15 +48,15 @@ export const useSocket = (
 
     // Connection event handlers
     socket.on('connect', () => {
-      console.log('Socket connected:', socket.id);
+      logger.info('Socket connected:', socket.id);
     });
 
     socket.on('disconnect', (reason: any) => {
-      console.log('Socket disconnected:', reason);
+      logger.info('Socket disconnected:', reason);
     });
 
     socket.on('connect_error', (error: any) => {
-      console.error('Socket connection error:', error);
+      logger.error('Socket connection error:', error);
     });
 
     // Register the specific event handler
@@ -78,15 +93,15 @@ export const useSocketConnection = (options: UseSocketOptions = {}) => {
     const socket = socketRef.current;
 
     socket.on('connect', () => {
-      console.log('Socket connected:', socket.id);
+      logger.info('Socket connected:', socket.id);
     });
 
     socket.on('disconnect', (reason: any) => {
-      console.log('Socket disconnected:', reason);
+      logger.info('Socket disconnected:', reason);
     });
 
     socket.on('connect_error', (error: any) => {
-      console.error('Socket connection error:', error);
+      logger.error('Socket connection error:', error);
     });
 
     return () => {

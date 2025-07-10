@@ -71,9 +71,10 @@ class OfflineStorageService {
     try {
       let key = await AsyncStorage.getItem('offline_encryption_key');
       if (!key) {
+        const randomBytes = await Crypto.getRandomBytesAsync(32);
         key = await Crypto.digestStringAsync(
           Crypto.CryptoDigestAlgorithm.SHA256,
-          `${Date.now()}_${Math.random()}`
+          `${Date.now()}_${randomBytes.join('')}`
         );
         await AsyncStorage.setItem('offline_encryption_key', key);
       }
@@ -508,9 +509,10 @@ class OfflineStorageService {
   }
 
   private async generateId(): Promise<string> {
+    const randomBytes = await Crypto.getRandomBytesAsync(16);
     return await Crypto.digestStringAsync(
       Crypto.CryptoDigestAlgorithm.SHA256,
-      `${Date.now()}_${Math.random()}`
+      `${Date.now()}_${randomBytes.join('')}`
     );
   }
 

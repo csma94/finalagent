@@ -30,6 +30,20 @@ import {
 } from '@mui/icons-material';
 import io from 'socket.io-client';
 
+const logger = {
+  info: (message: string, ...args: any[]) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[INFO] ${message}`, ...args);
+    }
+  },
+  error: (message: string, ...args: any[]) => {
+    console.error(`[ERROR] ${message}`, ...args);
+  },
+  warn: (message: string, ...args: any[]) => {
+    console.warn(`[WARN] ${message}`, ...args);
+  }
+};
+
 import { useAuth } from '../../hooks/useAuth';
 import { monitoringAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -102,7 +116,7 @@ const RealTimeMonitoringPage: React.FC = () => {
     });
 
     newSocket.on('connect', () => {
-      console.log('Connected to monitoring socket');
+      logger.info('Connected to monitoring socket');
       newSocket.emit('join_monitoring');
     });
 
@@ -152,7 +166,7 @@ const RealTimeMonitoringPage: React.FC = () => {
         setMapCenter({ lat: avgLat, lng: avgLng });
       }
     } catch (error) {
-      console.error('Failed to load monitoring data:', error);
+      logger.error('Failed to load monitoring data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -222,7 +236,7 @@ const RealTimeMonitoringPage: React.FC = () => {
         )
       );
     } catch (error) {
-      console.error('Failed to acknowledge alert:', error);
+      logger.error('Failed to acknowledge alert:', error);
     }
   };
 

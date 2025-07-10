@@ -371,7 +371,7 @@ const GroupChatScreen: React.FC = () => {
           style={styles.textInput}
           value={messageText}
           onChangeText={handleTyping}
-          placeholder="Type a message..."
+          placeholder="Enter your message to the group..."
           placeholderTextColor={colors.textSecondary}
           multiline
           maxLength={1000}

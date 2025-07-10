@@ -31,6 +31,7 @@ import {
   StepLabel,
   StepContent,
 } from '@mui/material';
+import winston from 'winston';
 import {
   CalendarToday as CalendarIcon,
   AutoAwesome as OptimizeIcon,
@@ -68,6 +69,17 @@ try {
 }
 
 const localizer = momentLocalizer(moment);
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
 
 interface ScheduleRequirements {
   siteId: string;
@@ -165,7 +177,7 @@ const AdvancedSchedulingPage: React.FC = () => {
       // Check for conflicts
       await checkScheduleConflicts();
     } catch (error) {
-      console.error('Failed to load scheduling data:', error);
+      logger.error('Failed to load scheduling data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -179,7 +191,7 @@ const AdvancedSchedulingPage: React.FC = () => {
       });
       setConflicts(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-      console.error('Failed to check conflicts:', error);
+      logger.error('Failed to check conflicts:', error);
     }
   };
 
@@ -190,7 +202,7 @@ const AdvancedSchedulingPage: React.FC = () => {
       setOptimizationResults(response.data);
       setOptimizationDialogOpen(true);
     } catch (error) {
-      console.error('Failed to optimize schedule:', error);
+      logger.error('Failed to optimize schedule:', error);
     } finally {
       setIsOptimizing(false);
     }
@@ -204,7 +216,7 @@ const AdvancedSchedulingPage: React.FC = () => {
       setOptimizationDialogOpen(false);
       await loadInitialData();
     } catch (error) {
-      console.error('Failed to apply optimization:', error);
+      logger.error('Failed to apply optimization:', error);
     }
   };
 
@@ -225,7 +237,7 @@ const AdvancedSchedulingPage: React.FC = () => {
       link.click();
       link.remove();
     } catch (error) {
-      console.error('Failed to export schedule:', error);
+      logger.error('Failed to export schedule:', error);
     }
   };
 
@@ -333,7 +345,7 @@ const AdvancedSchedulingPage: React.FC = () => {
                   popup
                   onSelectEvent={(event: any) => {
                     // Handle event selection
-                    console.log('Selected event:', event);
+                    logger.info('Selected event:', event);
                   }}
                 />
               </Box>

@@ -344,8 +344,7 @@ class OfflineSyncService {
           speed,
           heading,
           timestamp,
-          batteryLevel,
-          isMockLocation
+          batteryLevel
         } = record;
 
         // Check for duplicate based on timestamp and coordinates
@@ -371,6 +370,27 @@ class OfflineSyncService {
           continue;
         }
 
+        // Validate GPS coordinates are within valid ranges
+        if (coordinates.latitude < -90 || coordinates.latitude > 90 ||
+            coordinates.longitude < -180 || coordinates.longitude > 180) {
+          results.errors.push({
+            offlineId,
+            error: 'GPS coordinates out of valid range',
+            record
+          });
+          continue;
+        }
+
+        // Validate accuracy is reasonable (reject if accuracy > 100m)
+        if (accuracy && accuracy > 100) {
+          results.errors.push({
+            offlineId,
+            error: 'GPS accuracy too low (>100m)',
+            record
+          });
+          continue;
+        }
+
         // Create location tracking record
         await this.prisma.locationTracking.create({
           data: {
@@ -383,7 +403,7 @@ class OfflineSyncService {
             heading,
             timestamp: new Date(timestamp),
             batteryLevel,
-            isMockLocation: isMockLocation || false
+            isValidated: true
           }
         });
 

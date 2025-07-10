@@ -447,7 +447,17 @@ class WebSocketService {
   }
 
   private generateMessageId(): string {
-    return `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const timestamp = Date.now();
+    const randomBytes = new Uint8Array(6);
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      crypto.getRandomValues(randomBytes);
+    } else {
+      for (let i = 0; i < randomBytes.length; i++) {
+        randomBytes[i] = Math.floor(Math.random() * 256);
+      }
+    }
+    const randomString = Array.from(randomBytes, byte => byte.toString(36)).join('');
+    return `msg_${timestamp}_${randomString}`;
   }
 
   public getConnectionStatus(): {

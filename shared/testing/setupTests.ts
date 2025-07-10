@@ -107,9 +107,29 @@ beforeAll(() => {
     value: sessionStorageMock,
   });
 
-  // Mock navigator.geolocation
+  // Mock navigator.geolocation with realistic GPS validation
   const mockGeolocation = {
-    getCurrentPosition: jest.fn(),
+    getCurrentPosition: jest.fn((success, error, options) => {
+      const position = {
+        coords: {
+          latitude: 37.7749,
+          longitude: -122.4194,
+          accuracy: 10,
+          altitude: null,
+          altitudeAccuracy: null,
+          heading: null,
+          speed: null,
+        },
+        timestamp: Date.now(),
+      };
+      
+      if (position.coords.latitude < -90 || position.coords.latitude > 90 ||
+          position.coords.longitude < -180 || position.coords.longitude > 180) {
+        error && error({ code: 2, message: 'Invalid coordinates' });
+      } else {
+        success && success(position);
+      }
+    }),
     watchPosition: jest.fn(),
     clearWatch: jest.fn(),
   };

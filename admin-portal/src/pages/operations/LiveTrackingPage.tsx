@@ -25,6 +25,7 @@ import {
   Avatar,
   Divider,
 } from '@mui/material';
+import winston from 'winston';
 import {
   Refresh as RefreshIcon,
   Fullscreen as FullscreenIcon,
@@ -72,6 +73,17 @@ interface TrackingStats {
   averageResponseTime: number;
   siteCoverage: number;
 }
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
 
 const LiveTrackingPage: React.FC = () => {
   const { user } = useAuth();
@@ -156,7 +168,7 @@ const LiveTrackingPage: React.FC = () => {
       setLastUpdated(new Date());
 
     } catch (err: any) {
-      console.error('Failed to fetch tracking data:', err);
+      logger.error('Failed to fetch tracking data:', err);
       setError('Failed to load tracking data. Please check your connection and try again.');
       setAgents([]);
       setStats(null);
@@ -187,12 +199,12 @@ const LiveTrackingPage: React.FC = () => {
 
   const handleEmergencyContact = async (agent: AgentLocation) => {
     // Implement emergency contact functionality
-    console.log('Emergency contact for agent:', agent.agentName);
+    logger.info('Emergency contact initiated for agent:', { agentId: agent.agentId, agentName: agent.agentName });
   };
 
   const handleSendMessage = async (agent: AgentLocation) => {
     // Implement messaging functionality
-    console.log('Send message to agent:', agent.agentName);
+    logger.info('Message sending initiated for agent:', { agentId: agent.agentId, agentName: agent.agentName });
   };
 
   const getStatusColor = (status: string) => {

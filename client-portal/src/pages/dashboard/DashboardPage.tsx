@@ -18,6 +18,7 @@ import {
   CheckCircle as CheckCircleIcon,
 } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
+import winston from 'winston';
 
 import { RootState, AppDispatch } from '../../store';
 import { fetchDashboardData } from '../../store/slices/dashboardSlice';
@@ -30,6 +31,17 @@ import SiteStatusCard from '../../components/dashboard/SiteStatusCard';
 import AlertsCard from '../../components/dashboard/AlertsCard';
 import PerformanceChart from '../../components/dashboard/PerformanceChart';
 import LiveMapCard from '../../components/dashboard/LiveMapCard';
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
 
 const DashboardPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -51,7 +63,7 @@ const DashboardPage: React.FC = () => {
   // Real-time updates via Socket.IO
   useSocket('dashboard_update', (data: any) => {
     // Handle real-time dashboard updates
-    console.log('Dashboard update received:', data);
+    logger.info('Dashboard update received:', data);
     // You could dispatch specific actions to update parts of the dashboard
   });
 
@@ -59,7 +71,7 @@ const DashboardPage: React.FC = () => {
     try {
       await dispatch(fetchDashboardData()).unwrap();
     } catch (error) {
-      console.error('Failed to load dashboard data:', error);
+      logger.error('Failed to load dashboard data:', error);
     }
   }, [dispatch]);
 

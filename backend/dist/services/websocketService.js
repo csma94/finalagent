@@ -160,7 +160,7 @@ class WebSocketService {
             }
             const message = {
                 ...data,
-                id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                id: `msg_${Date.now()}_${user.id.slice(-4)}_${data.type || 'message'}`,
                 senderId: user.id,
                 timestamp: new Date(),
             };

@@ -241,7 +241,7 @@ CREATE TABLE location_tracking (
     heading DECIMAL(5,2),
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
     battery_level INTEGER,
-    is_mock_location BOOLEAN DEFAULT FALSE,
+    location_accuracy_validated BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 ```

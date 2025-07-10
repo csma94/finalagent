@@ -4,6 +4,20 @@ const fs = require('fs').promises;
 const path = require('path');
 const { execSync } = require('child_process');
 const { PrismaClient } = require('@prisma/client');
+const winston = require('winston');
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple()
+    })
+  ]
+});
 
 /**
  * Comprehensive Production Readiness Assessment Tool
@@ -32,7 +46,7 @@ class ProductionReadinessAssessment {
    * Run complete production readiness assessment
    */
   async runAssessment() {
-    console.log('🔍 Starting Production Readiness Assessment...\n');
+    logger.info('🔍 Starting Production Readiness Assessment...\n');
 
     try {
       // Run all assessment categories
@@ -51,7 +65,7 @@ class ProductionReadinessAssessment {
 
       return this.results;
     } catch (error) {
-      console.error('❌ Assessment failed:', error.message);
+      logger.error('❌ Assessment failed:', error.message);
       throw error;
     }
   }
@@ -60,7 +74,7 @@ class ProductionReadinessAssessment {
    * Security Assessment
    */
   async assessSecurity() {
-    console.log('🔒 Assessing Security...');
+    logger.info('🔒 Assessing Security...');
     
     const checks = {
       environmentVariables: await this.checkEnvironmentVariables(),
@@ -76,14 +90,14 @@ class ProductionReadinessAssessment {
     const score = this.calculateCategoryScore(checks);
     this.results.categories.security = { score, checks, status: this.getStatus(score) };
     
-    console.log(`   Security Score: ${score}/100 (${this.getStatus(score)})\n`);
+    logger.info(`   Security Score: ${score}/100 (${this.getStatus(score)})\n`);
   }
 
   /**
    * Performance Assessment
    */
   async assessPerformance() {
-    console.log('⚡ Assessing Performance...');
+    logger.info('⚡ Assessing Performance...');
     
     const checks = {
       caching: await this.checkCaching(),
@@ -98,14 +112,14 @@ class ProductionReadinessAssessment {
     const score = this.calculateCategoryScore(checks);
     this.results.categories.performance = { score, checks, status: this.getStatus(score) };
     
-    console.log(`   Performance Score: ${score}/100 (${this.getStatus(score)})\n`);
+    logger.info(`   Performance Score: ${score}/100 (${this.getStatus(score)})\n`);
   }
 
   /**
    * Monitoring Assessment
    */
   async assessMonitoring() {
-    console.log('📊 Assessing Monitoring...');
+    logger.info('📊 Assessing Monitoring...');
     
     const checks = {
       logging: await this.checkLogging(),
@@ -119,14 +133,14 @@ class ProductionReadinessAssessment {
     const score = this.calculateCategoryScore(checks);
     this.results.categories.monitoring = { score, checks, status: this.getStatus(score) };
     
-    console.log(`   Monitoring Score: ${score}/100 (${this.getStatus(score)})\n`);
+    logger.info(`   Monitoring Score: ${score}/100 (${this.getStatus(score)})\n`);
   }
 
   /**
    * Deployment Assessment
    */
   async assessDeployment() {
-    console.log('🚀 Assessing Deployment...');
+    logger.info('🚀 Assessing Deployment...');
     
     const checks = {
       containerization: await this.checkContainerization(),
@@ -140,14 +154,14 @@ class ProductionReadinessAssessment {
     const score = this.calculateCategoryScore(checks);
     this.results.categories.deployment = { score, checks, status: this.getStatus(score) };
     
-    console.log(`   Deployment Score: ${score}/100 (${this.getStatus(score)})\n`);
+    logger.info(`   Deployment Score: ${score}/100 (${this.getStatus(score)})\n`);
   }
 
   /**
    * Database Assessment
    */
   async assessDatabase() {
-    console.log('🗄️ Assessing Database...');
+    logger.info('🗄️ Assessing Database...');
     
     const checks = {
       connection: await this.checkDatabaseConnection(),

@@ -261,7 +261,7 @@ class EncryptionService {
    * Generate Laplacian noise
    */
   laplacianNoise(scale) {
-    const u = Math.random() - 0.5;
+    const u = crypto.randomBytes(4).readUInt32BE(0) / 0xFFFFFFFF - 0.5;
     return -scale * Math.sign(u) * Math.log(1 - 2 * Math.abs(u));
   }
 
@@ -270,11 +270,12 @@ class EncryptionService {
    */
   secureDelete(data) {
     if (typeof data === 'string') {
-      // Overwrite string with random data
+      // Overwrite string with cryptographically secure random data
       const length = data.length;
+      const randomBytes = crypto.randomBytes(length);
       let overwritten = '';
       for (let i = 0; i < length; i++) {
-        overwritten += String.fromCharCode(Math.floor(Math.random() * 256));
+        overwritten += String.fromCharCode(randomBytes[i]);
       }
       return overwritten;
     }

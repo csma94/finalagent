@@ -1,20 +1,34 @@
 const { PrismaClient } = require('@prisma/client');
+const winston = require('winston');
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple()
+    })
+  ]
+});
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting database seeding...');
+  logger.info('🌱 Starting database seeding...');
 
   try {
     // Note: User authentication is now handled by Clerk
     // No need to create users with passwords in the database
     // Users will be created automatically when they sign up through Clerk
 
-    console.log('✅ Database seeding completed (Clerk handles user authentication)');
-    console.log('\n📋 Summary:');
-    console.log('- Authentication: Handled by Clerk');
-    console.log('- Users: Created automatically through Clerk sign-up');
-    console.log('\n⚠️  IMPORTANT: Configure Clerk authentication in your environment variables!');
+    logger.info('✅ Database seeding completed (Clerk handles user authentication)');
+    logger.info('\n📋 Summary:');
+    logger.info('- Authentication: Handled by Clerk');
+    logger.info('- Users: Created automatically through Clerk sign-up');
+    logger.warn('\n⚠️  IMPORTANT: Configure Clerk authentication in your environment variables!');
         role: 'ADMIN',
         status: 'ACTIVE',
         profile: {
@@ -35,7 +49,7 @@ async function main() {
       }
     });
 
-    console.log('✅ Admin user created:', adminUser.email);
+    logger.info('✅ Admin user created:', adminUser.email);
 
     // Create supervisor user
     const supervisorPasswordHash = await bcrypt.hash('supervisor123', 12);
@@ -66,7 +80,7 @@ async function main() {
       }
     });
 
-    console.log('✅ Supervisor user created:', supervisorUser.email);
+    logger.info('✅ Supervisor user created:', supervisorUser.email);
 
     // Create demo client
     const demoClient = await prisma.client.upsert({
@@ -105,7 +119,7 @@ async function main() {
       }
     });
 
-    console.log('✅ Demo client created:', demoClient.companyName);
+    logger.info('✅ Demo client created:', demoClient.companyName);
 
     // Create client user
     const clientPasswordHash = await bcrypt.hash('client123', 12);
@@ -137,7 +151,7 @@ async function main() {
       }
     });
 
-    console.log('✅ Client user created:', clientUser.email);
+    logger.info('✅ Client user created:', clientUser.email);
 
     // Create demo sites
     const site1 = await prisma.site.upsert({
@@ -212,7 +226,7 @@ async function main() {
       }
     });
 
-    console.log('✅ Demo sites created:', site1.name, 'and', site2.name);
+    logger.info('✅ Demo sites created:', site1.name, 'and', site2.name);
 
     // Create agent user
     const agentPasswordHash = await bcrypt.hash('agent123', 12);
@@ -273,17 +287,17 @@ async function main() {
       }
     });
 
-    console.log('✅ Agent created:', agentUser.email);
+    logger.info('✅ Agent created:', agentUser.email);
 
-    console.log('🎉 Database seeding completed successfully!');
-    console.log('\n📋 Demo Credentials:');
-    console.log('Admin: admin@bahinlink.com / admin123');
-    console.log('Supervisor: supervisor@bahinlink.com / supervisor123');
-    console.log('Agent: agent@bahinlink.com / agent123');
-    console.log('Client: client@demosecurity.com / client123');
+    logger.info('🎉 Database seeding completed successfully!');
+    logger.info('\n📋 Demo Credentials:');
+    logger.info('Admin: admin@bahinlink.com / admin123');
+    logger.info('Supervisor: supervisor@bahinlink.com / supervisor123');
+    logger.info('Agent: agent@bahinlink.com / agent123');
+    logger.info('Client: client@demosecurity.com / client123');
 
   } catch (error) {
-    console.error('❌ Error during seeding:', error);
+    logger.error('❌ Error during seeding:', error);
     throw error;
   }
 }

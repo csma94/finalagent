@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { io, Socket } from 'socket.io-client';
 import { useSelector, useDispatch } from 'react-redux';
 import { Alert } from 'react-native';
+import winston from 'winston';
 
 import { RootState, AppDispatch } from '../store';
 import { addNotification } from '../store/slices/notificationsSlice';
@@ -22,6 +23,17 @@ const SocketContext = createContext<SocketContextType | undefined>(undefined);
 interface SocketProviderProps {
   children: ReactNode;
 }
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -60,31 +72,31 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
     // Connection events
     newSocket.on('connect', () => {
-      console.log('Socket connected:', newSocket.id);
+      logger.info('Socket connected', { socketId: newSocket.id });
       setIsConnected(true);
     });
 
     newSocket.on('disconnect', (reason) => {
-      console.log('Socket disconnected:', reason);
+      logger.info('Socket disconnected', { reason });
       setIsConnected(false);
     });
 
     newSocket.on('connect_error', (error) => {
-      console.error('Socket connection error:', error);
+      logger.error('Socket connection error', { error: error.message });
       setIsConnected(false);
     });
 
     newSocket.on('reconnect', (attemptNumber) => {
-      console.log('Socket reconnected after', attemptNumber, 'attempts');
+      logger.info('Socket reconnected', { attemptNumber });
       setIsConnected(true);
     });
 
     newSocket.on('reconnect_error', (error) => {
-      console.error('Socket reconnection error:', error);
+      logger.error('Socket reconnection error', { error: error.message });
     });
 
     newSocket.on('reconnect_failed', () => {
-      console.error('Socket reconnection failed');
+      logger.error('Socket reconnection failed');
       Alert.alert(
         'Connection Failed',
         'Unable to connect to the server. Please check your internet connection and try again.',
@@ -102,11 +114,11 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     });
 
     newSocket.on('location_update_confirmed', (data) => {
-      console.log('Location update confirmed:', data);
+      logger.info('Location update confirmed', { data });
     });
 
     newSocket.on('shift_status_update_confirmed', (data) => {
-      console.log('Shift status update confirmed:', data);
+      logger.info('Shift status update confirmed', { data });
     });
 
     newSocket.on('emergency_alert_sent', (data) => {
