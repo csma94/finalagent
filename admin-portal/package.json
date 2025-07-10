@@ -43,8 +43,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "cross-env BROWSER=none GENERATE_SOURCEMAP=false react-scripts start",
-    "start:fast": "cross-env SKIP_PREFLIGHT_CHECK=true GENERATE_SOURCEMAP=false TSC_COMPILE_ON_ERROR=true react-scripts start",
+    "start": "cross-env PORT=12001 HOST=0.0.0.0 BROWSER=none GENERATE_SOURCEMAP=false DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts start",
+    "start:fast": "cross-env PORT=12001 HOST=0.0.0.0 SKIP_PREFLIGHT_CHECK=true GENERATE_SOURCEMAP=false TSC_COMPILE_ON_ERROR=true react-scripts start",
     "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

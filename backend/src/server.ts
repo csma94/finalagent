@@ -37,8 +37,11 @@ const corsOptions = {
     if (!origin) return callback(null, true);
     
     const allowedOrigins = [
-      'http://localhost:3001',
-      'http://localhost:3000',
+      'http://localhost:12000',
+      'http://localhost:12001', 
+      'http://localhost:12002',
+      'https://work-1-izuazmglxvjecjaw.prod-runtime.all-hands.dev',
+      'https://work-2-izuazmglxvjecjaw.prod-runtime.all-hands.dev',
       process.env.CORS_ORIGIN
     ].filter(Boolean);
     
@@ -87,33 +90,105 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Basic API endpoints for testing
+// Users API
 app.get('/api/users', (req, res) => {
   res.json({
     success: true,
     data: [
-      { id: 1, name: 'Admin User', role: 'admin', email: 'admin@bahinlink.com' },
-      { id: 2, name: 'Agent User', role: 'agent', email: 'agent@bahinlink.com' }
+      { id: 1, name: 'Admin User', role: 'admin', email: 'admin@bahinlink.com', status: 'active' },
+      { id: 2, name: 'Agent User', role: 'agent', email: 'agent@bahinlink.com', status: 'active' },
+      { id: 3, name: 'Supervisor User', role: 'supervisor', email: 'supervisor@bahinlink.com', status: 'active' }
     ]
   });
 });
 
+app.get('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+  res.json({
+    success: true,
+    data: { id: parseInt(id), name: 'User ' + id, role: 'agent', email: `user${id}@bahinlink.com`, status: 'active' }
+  });
+});
+
+app.post('/api/users', (req, res) => {
+  res.json({
+    success: true,
+    data: { id: Date.now(), ...req.body, status: 'active' }
+  });
+});
+
+app.put('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+  res.json({
+    success: true,
+    data: { id: parseInt(id), ...req.body }
+  });
+});
+
+app.delete('/api/users/:id', (req, res) => {
+  res.json({
+    success: true,
+    data: { message: 'User deleted successfully' }
+  });
+});
+
+// Agents API
+app.get('/api/agents', (req, res) => {
+  res.json({
+    success: true,
+    data: [
+      { 
+        id: 1, 
+        userId: 2, 
+        name: 'John Doe', 
+        status: 'active', 
+        currentSite: 'Downtown Office Complex',
+        location: { latitude: 40.7128, longitude: -74.0060 },
+        lastUpdate: new Date().toISOString()
+      },
+      { 
+        id: 2, 
+        userId: 3, 
+        name: 'Jane Smith', 
+        status: 'on-duty', 
+        currentSite: 'Shopping Mall',
+        location: { latitude: 40.7589, longitude: -73.9851 },
+        lastUpdate: new Date().toISOString()
+      }
+    ]
+  });
+});
+
+// Shifts API
 app.get('/api/shifts', (req, res) => {
   res.json({
     success: true,
     data: [
       {
         id: 1,
-        agentId: 2,
+        agentId: 1,
         siteId: 1,
         startTime: new Date().toISOString(),
         endTime: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
-        status: 'scheduled'
+        status: 'active',
+        agent: { name: 'John Doe' },
+        site: { name: 'Downtown Office Complex' }
+      },
+      {
+        id: 2,
+        agentId: 2,
+        siteId: 2,
+        startTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        endTime: new Date(Date.now() + 32 * 60 * 60 * 1000).toISOString(),
+        status: 'scheduled',
+        agent: { name: 'Jane Smith' },
+        site: { name: 'Shopping Mall' }
       }
     ]
   });
 });
 
+// Sites API
 app.get('/api/sites', (req, res) => {
   res.json({
     success: true,
@@ -122,12 +197,23 @@ app.get('/api/sites', (req, res) => {
         id: 1,
         name: 'Downtown Office Complex',
         address: '123 Business St, City, State 12345',
-        coordinates: { latitude: 40.7128, longitude: -74.0060 }
+        coordinates: { latitude: 40.7128, longitude: -74.0060 },
+        status: 'active',
+        clientId: 1
+      },
+      {
+        id: 2,
+        name: 'Shopping Mall',
+        address: '456 Mall Ave, City, State 12345',
+        coordinates: { latitude: 40.7589, longitude: -73.9851 },
+        status: 'active',
+        clientId: 2
       }
     ]
   });
 });
 
+// Reports API
 app.get('/api/reports', (req, res) => {
   res.json({
     success: true,
@@ -138,21 +224,30 @@ app.get('/api/reports', (req, res) => {
         title: 'Security Check',
         content: 'All clear during patrol',
         priority: 'normal',
+        status: 'completed',
+        agentId: 1,
+        siteId: 1,
         createdAt: new Date().toISOString()
+      },
+      {
+        id: 2,
+        type: 'patrol',
+        title: 'Routine Patrol',
+        content: 'Perimeter check completed successfully',
+        priority: 'low',
+        status: 'completed',
+        agentId: 2,
+        siteId: 2,
+        createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
       }
     ]
   });
 });
 
-logger.info('Registering /api/analytics/dashboard route...');
+// Analytics API
 app.get('/api/analytics/dashboard', (req, res) => {
   logger.info('Received request to /api/analytics/dashboard');
   try {
-    // Set CORS headers explicitly
-    res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    
-    // Sample dashboard data - in a real app, this would come from your database
     const dashboardData = {
       activeShifts: 5,
       totalAgents: 12,
@@ -175,6 +270,135 @@ app.get('/api/analytics/dashboard', (req, res) => {
       }
     });
   }
+});
+
+app.get('/api/analytics/kpi', (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      totalAgents: 12,
+      activeShifts: 5,
+      completedShifts: 45,
+      incidentsResolved: 23,
+      clientSatisfaction: 4.8,
+      responseTime: 2.3
+    }
+  });
+});
+
+app.get('/api/analytics/widgets', (req, res) => {
+  res.json({
+    success: true,
+    data: [
+      { id: 'active-agents', title: 'Active Agents', value: 8, type: 'number' },
+      { id: 'incidents-today', title: 'Incidents Today', value: 2, type: 'number' },
+      { id: 'response-time', title: 'Avg Response Time', value: '2.3 min', type: 'text' }
+    ]
+  });
+});
+
+// Monitoring API
+app.get('/api/monitoring/locations', (req, res) => {
+  res.json({
+    success: true,
+    data: [
+      {
+        agentId: 1,
+        agentName: 'John Doe',
+        latitude: 40.7128,
+        longitude: -74.0060,
+        status: 'on-duty',
+        lastUpdate: new Date().toISOString(),
+        siteId: 1,
+        siteName: 'Downtown Office Complex'
+      },
+      {
+        agentId: 2,
+        agentName: 'Jane Smith',
+        latitude: 40.7589,
+        longitude: -73.9851,
+        status: 'on-duty',
+        lastUpdate: new Date().toISOString(),
+        siteId: 2,
+        siteName: 'Shopping Mall'
+      }
+    ]
+  });
+});
+
+app.get('/api/monitoring/status', (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      systemStatus: 'healthy',
+      activeAgents: 8,
+      activeSites: 5,
+      lastUpdate: new Date().toISOString()
+    }
+  });
+});
+
+app.get('/api/monitoring/alerts', (req, res) => {
+  res.json({
+    success: true,
+    data: [
+      {
+        id: 1,
+        type: 'geofence_violation',
+        message: 'Agent outside designated area',
+        agentId: 1,
+        severity: 'medium',
+        timestamp: new Date().toISOString(),
+        acknowledged: false
+      }
+    ]
+  });
+});
+
+// Scheduling API
+app.get('/api/scheduling/schedule', (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      shifts: [
+        {
+          id: 1,
+          agentId: 1,
+          siteId: 1,
+          startTime: new Date().toISOString(),
+          endTime: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
+          status: 'active'
+        }
+      ]
+    }
+  });
+});
+
+// System API
+app.get('/api/system/health', (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      status: 'healthy',
+      services: {
+        database: 'healthy',
+        redis: 'healthy',
+        websocket: 'healthy'
+      },
+      timestamp: new Date().toISOString()
+    }
+  });
+});
+
+app.get('/api/system/config', (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      appName: 'BahinLink',
+      version: '1.0.0',
+      environment: process.env.NODE_ENV || 'development'
+    }
+  });
 });
 
 // Authentication handled by Clerk - no custom auth endpoints needed
