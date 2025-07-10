@@ -13,6 +13,18 @@ import { MaterialIcons } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import { useNavigation } from '@react-navigation/native';
+import winston from 'winston';
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
 
 interface CameraScreenProps {
   onPhotoTaken?: (photoUri: string) => void;
@@ -69,14 +81,14 @@ const CameraScreen: React.FC<CameraScreenProps> = ({
           try {
             await MediaLibrary.saveToLibraryAsync(photo.uri);
           } catch (error) {
-            console.log('Failed to save to gallery:', error);
+            logger.warn('Failed to save to gallery:', error);
           }
         }
 
         // Show success feedback
         Alert.alert('Photo Captured', 'Photo has been saved successfully!');
       } catch (error) {
-        console.error('Failed to take picture:', error);
+        logger.error('Failed to take picture:', error);
         Alert.alert('Error', 'Failed to capture photo. Please try again.');
       }
     }

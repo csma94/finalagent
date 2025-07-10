@@ -66,5 +66,8 @@
   ],
   "prisma": {
     "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "geolib": "^3.3.4"
   }
 }

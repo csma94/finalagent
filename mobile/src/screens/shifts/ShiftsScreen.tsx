@@ -184,7 +184,7 @@ const ShiftsScreen: React.FC<ShiftsScreenProps> = ({ navigation }) => {
       <View style={styles.header}>
         <Title style={styles.title}>My Shifts</Title>
         <Searchbar
-          placeholder="Search shifts..."
+          placeholder="Search by site name or client company"
           onChangeText={setSearchQuery}
           value={searchQuery}
           style={styles.searchbar}
