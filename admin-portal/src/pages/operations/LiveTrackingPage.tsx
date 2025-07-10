@@ -43,6 +43,13 @@ import { useAuth } from '../../hooks/useAuth';
 import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import AgentTrackingMap from '../../components/maps/AgentTrackingMap';
 
+const createLogger = (level: string = 'info') => ({
+  info: (message: string, meta?: any) => console.log(`[INFO] ${message}`, meta || ''),
+  error: (message: string, meta?: any) => console.error(`[ERROR] ${message}`, meta || ''),
+  warn: (message: string, meta?: any) => console.warn(`[WARN] ${message}`, meta || ''),
+  debug: (message: string, meta?: any) => console.debug(`[DEBUG] ${message}`, meta || ''),
+});
+
 interface AgentLocation {
   id: string;
   agentId: string;
@@ -72,6 +79,8 @@ interface TrackingStats {
   averageResponseTime: number;
   siteCoverage: number;
 }
+
+const logger = createLogger('info');
 
 const LiveTrackingPage: React.FC = () => {
   const { user } = useAuth();
@@ -156,7 +165,7 @@ const LiveTrackingPage: React.FC = () => {
       setLastUpdated(new Date());
 
     } catch (err: any) {
-      console.error('Failed to fetch tracking data:', err);
+      logger.error('Failed to fetch tracking data:', err);
       setError('Failed to load tracking data. Please check your connection and try again.');
       setAgents([]);
       setStats(null);
@@ -187,12 +196,12 @@ const LiveTrackingPage: React.FC = () => {
 
   const handleEmergencyContact = async (agent: AgentLocation) => {
     // Implement emergency contact functionality
-    console.log('Emergency contact for agent:', agent.agentName);
+    logger.info('Emergency contact initiated for agent:', { agentId: agent.agentId, agentName: agent.agentName });
   };
 
   const handleSendMessage = async (agent: AgentLocation) => {
     // Implement messaging functionality
-    console.log('Send message to agent:', agent.agentName);
+    logger.info('Message sending initiated for agent:', { agentId: agent.agentId, agentName: agent.agentName });
   };
 
   const getStatusColor = (status: string) => {

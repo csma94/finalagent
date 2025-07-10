@@ -31,6 +31,13 @@ import { useAuth } from '../../hooks/useAuth';
 import { clientPortalAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
+const logger = {
+  info: (message: string, ...args: any[]) => console.log(`[INFO] ${message}`, ...args),
+  error: (message: string, ...args: any[]) => console.error(`[ERROR] ${message}`, ...args),
+  warn: (message: string, ...args: any[]) => console.warn(`[WARN] ${message}`, ...args),
+  debug: (message: string, ...args: any[]) => console.debug(`[DEBUG] ${message}`, ...args),
+};
+
 interface AgentLocation {
   agentId: string;
   agentName: string;
@@ -77,7 +84,7 @@ const LiveMonitoringPage: React.FC = () => {
     });
 
     newSocket.on('connect', () => {
-      console.log('Connected to client monitoring socket');
+      logger.info('Connected to client monitoring socket');
       newSocket.emit('join_client_monitoring', { clientId: user?.id });
     });
 
@@ -146,7 +153,7 @@ const LiveMonitoringPage: React.FC = () => {
         setMapCenter({ lat: avgLat, lng: avgLng });
       }
     } catch (error) {
-      console.error('Failed to load monitoring data:', error);
+      logger.error('Failed to load monitoring data:', error);
     } finally {
       setIsLoading(false);
     }

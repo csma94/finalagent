@@ -9,10 +9,9 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 
-# Build outputs (except the one we want)
+# Build outputs (except the ones we want to deploy)
 backend/
 mobile/
-client-portal/
 docs/
 scripts/
 prisma/

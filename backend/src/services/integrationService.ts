@@ -1,6 +1,19 @@
 import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import { EventEmitter } from 'events';
+import winston from 'winston';
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.File({ filename: 'logs/integration.log' }),
+    new winston.transports.Console()
+  ]
+});
 
 const prisma = new PrismaClient();
 
@@ -37,9 +50,9 @@ export class IntegrationService extends EventEmitter {
         }
       }
 
-      console.log('Integration service initialized with', integrations.length, 'active integrations');
+      logger.info('Integration service initialized with', { activeIntegrations: integrations.length });
     } catch (error) {
-      console.error('Failed to initialize integrations:', error);
+      logger.error('Failed to initialize integrations:', error);
     }
   }
 
@@ -64,7 +77,7 @@ export class IntegrationService extends EventEmitter {
         visibility: response.data.visibility,
       };
     } catch (error) {
-      console.error('Weather API error:', error);
+      logger.error('Weather API error:', error);
       throw new Error('Failed to fetch weather data');
     }
   }
@@ -105,7 +118,7 @@ export class IntegrationService extends EventEmitter {
         to: response.data.to,
       };
     } catch (error) {
-      console.error('SMS sending error:', error);
+      logger.error('SMS sending error:', error);
       throw new Error('Failed to send SMS');
     }
   }
@@ -151,7 +164,7 @@ export class IntegrationService extends EventEmitter {
         status: 'sent',
       };
     } catch (error) {
-      console.error('Email sending error:', error);
+      logger.error('Email sending error:', error);
       throw new Error('Failed to send email');
     }
   }
@@ -191,7 +204,7 @@ export class IntegrationService extends EventEmitter {
         results: response.data.results,
       };
     } catch (error) {
-      console.error('Push notification error:', error);
+      logger.error('Push notification error:', error);
       throw new Error('Failed to send push notification');
     }
   }
@@ -201,7 +214,7 @@ export class IntegrationService extends EventEmitter {
     try {
       const webhookUrl = this.webhookEndpoints.get(type);
       if (!webhookUrl) {
-        console.log(`No webhook configured for type: ${type}`);
+        logger.info(`No webhook configured for type: ${type}`);
         return;
       }
 
@@ -219,10 +232,10 @@ export class IntegrationService extends EventEmitter {
         timeout: 10000,
       });
 
-      console.log(`Webhook sent successfully for ${type}:${event}`);
+      logger.info(`Webhook sent successfully for ${type}:${event}`);
       return response.data;
     } catch (error) {
-      console.error(`Webhook error for ${type}:${event}:`, error);
+      logger.error(`Webhook error for ${type}:${event}:`, error);
       throw new Error('Failed to send webhook');
     }
   }
@@ -250,7 +263,7 @@ export class IntegrationService extends EventEmitter {
         placeId: result.place_id,
       };
     } catch (error) {
-      console.error('Reverse geocoding error:', error);
+      logger.error('Reverse geocoding error:', error);
       throw new Error('Failed to reverse geocode location');
     }
   }
@@ -294,9 +307,9 @@ export class IntegrationService extends EventEmitter {
       // Webhook to external systems
       await this.sendWebhook('EMERGENCY', 'incident.created', incident);
 
-      console.log('Emergency notifications sent');
+      logger.info('Emergency notifications sent', { incidentId: incident.id });
     } catch (error) {
-      console.error('Emergency notification error:', error);
+      logger.error('Emergency notification error:', error);
       throw new Error('Failed to notify emergency services');
     }
   }

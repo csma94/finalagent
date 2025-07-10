@@ -665,7 +665,7 @@ const TrainingManagementPage: React.FC = () => {
 
             <TextField
               size="small"
-              placeholder="Search trainings..."
+              placeholder="Search by training title, description, or category"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               InputProps={{

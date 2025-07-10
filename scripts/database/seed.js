@@ -589,21 +589,21 @@ if (require.main === module) {
   if (options.clear) {
     seeder.clearData()
       .then(() => {
-        console.log('Database cleared successfully');
+        logger.info('Database cleared successfully');
         process.exit(0);
       })
       .catch((error) => {
-        console.error('Failed to clear database:', error.message);
+        logger.error('Failed to clear database:', error.message);
         process.exit(1);
       });
   } else {
     seeder.seed(options)
       .then((result) => {
-        console.log('Seeding completed successfully:', result);
+        logger.info('Seeding completed successfully:', result);
         process.exit(0);
       })
       .catch((error) => {
-        console.error('Seeding failed:', error.message);
+        logger.error('Seeding failed:', error.message);
         process.exit(1);
       });
   }

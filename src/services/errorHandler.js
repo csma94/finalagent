@@ -485,7 +485,8 @@ class ErrorHandlerService {
    * Utility methods
    */
   generateErrorId() {
-    return `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const crypto = require('crypto');
+    return `err_${Date.now()}_${crypto.randomBytes(6).toString('hex')}`;
   }
 
   generateErrorFingerprint(error) {

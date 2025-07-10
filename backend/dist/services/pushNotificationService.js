@@ -61,7 +61,7 @@ class PushNotificationService {
     }
     async sendNotification(notification) {
         try {
-            const notificationId = `notif_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            const notificationId = `notif_${Date.now()}_${require('crypto').randomBytes(6).toString('hex')}`;
             const fullNotification = {
                 ...notification,
                 id: notificationId,
@@ -191,7 +191,7 @@ class PushNotificationService {
     }
     async scheduleNotification(notification, scheduledFor) {
         try {
-            const notificationId = `scheduled_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            const notificationId = `scheduled_${Date.now()}_${require('crypto').randomBytes(6).toString('hex')}`;
             const scheduledNotification = {
                 ...notification,
                 id: notificationId,

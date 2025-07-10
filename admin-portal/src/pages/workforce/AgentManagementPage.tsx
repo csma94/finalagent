@@ -463,7 +463,7 @@ const AgentManagementPage: React.FC = () => {
 
         <TextField
           size="small"
-          placeholder="Search agents..."
+          placeholder="Search by name, email, or employee ID"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           InputProps={{

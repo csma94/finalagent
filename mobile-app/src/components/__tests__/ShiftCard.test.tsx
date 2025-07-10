@@ -6,11 +6,10 @@ import {
   createMockUser,
   expectElementToBeVisible,
   expectElementToHaveText,
-  mockGeolocation,
 } from '../../../shared/testing/reactTestUtils';
 import ShiftCard from '../ShiftCard';
 
-// Mock the geolocation and API services
+// Mock the API services
 jest.mock('../../services/api', () => ({
   shiftsAPI: {
     checkIn: jest.fn(),
@@ -38,7 +37,6 @@ describe('ShiftCard Component', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockGeolocation({ latitude: 40.7128, longitude: -74.0060 });
   });
 
   describe('Rendering', () => {
@@ -183,7 +181,7 @@ describe('ShiftCard Component', () => {
 
     it('should handle check-in errors', async () => {
       const shift = createMockShift({ status: 'scheduled' });
-      const mockCheckIn = jest.fn().mockRejectedValue(new Error('Location required'));
+      const mockCheckIn = jest.fn().mockRejectedValue(new Error('GPS coordinates required'));
 
       renderWithProviders(
         <ShiftCard {...defaultProps} shift={shift} onCheckIn={mockCheckIn} />,
@@ -198,7 +196,7 @@ describe('ShiftCard Component', () => {
       fireEvent.click(checkInButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/location required/i)).toBeInTheDocument();
+        expect(screen.getByText(/GPS coordinates required/i)).toBeInTheDocument();
       });
     });
 
@@ -438,31 +436,24 @@ describe('ShiftCard Component', () => {
       expect(screen.getByText(/unknown site/i)).toBeInTheDocument();
     });
 
-    it('should handle geolocation errors', async () => {
-      // Mock geolocation error
-      const mockGeolocationError = {
-        getCurrentPosition: jest.fn().mockImplementation((success, error) =>
-          error({ code: 1, message: 'Permission denied' })
-        ),
-      };
-      
-      Object.defineProperty(navigator, 'geolocation', {
-        value: mockGeolocationError,
-      });
-
+    it('should handle GPS coordinate validation errors', async () => {
       const shift = createMockShift({ status: 'scheduled' });
+      const mockCheckIn = jest.fn().mockRejectedValue(new Error('Invalid GPS coordinates'));
 
-      renderWithProviders(<ShiftCard {...defaultProps} shift={shift} />, {
-        initialState: {
-          auth: { user: mockUser, isAuthenticated: true },
-        },
-      });
+      renderWithProviders(
+        <ShiftCard {...defaultProps} shift={shift} onCheckIn={mockCheckIn} />,
+        {
+          initialState: {
+            auth: { user: mockUser, isAuthenticated: true },
+          },
+        }
+      );
 
       const checkInButton = screen.getByRole('button', { name: /check in/i });
       fireEvent.click(checkInButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/location permission required/i)).toBeInTheDocument();
+        expect(screen.getByText(/invalid GPS coordinates/i)).toBeInTheDocument();
       });
     });
   });

@@ -69,13 +69,16 @@ export default function(data) {
     { weight: 10, test: testAnalyticsEndpoints },
   ];
   
-  // Select scenario based on weight
-  const random = Math.random() * 100;
-  let cumulativeWeight = 0;
+  // Select scenario based on weight using deterministic selection
+  const scenarioIndex = (__VU - 1) % scenarios.length;
+  const totalWeight = scenarios.reduce((sum, s) => sum + s.weight, 0);
+  const weightPerVU = totalWeight / scenarios.length;
+  const targetWeight = (scenarioIndex + 1) * weightPerVU;
   
+  let cumulativeWeight = 0;
   for (const scenario of scenarios) {
     cumulativeWeight += scenario.weight;
-    if (random <= cumulativeWeight) {
+    if (targetWeight <= cumulativeWeight) {
       scenario.test();
       break;
     }
@@ -266,10 +269,10 @@ function testAnalyticsEndpoints() {
 
 function getRandomToken() {
   const tokens = Object.values(authTokens).filter(token => token);
-  return tokens[Math.floor(Math.random() * tokens.length)];
+  const tokenIndex = (__VU - 1) % tokens.length;
+  return tokens[tokenIndex];
 }
 
 export function teardown(data) {
   // Cleanup if needed
-  console.log('Load test completed');
 }

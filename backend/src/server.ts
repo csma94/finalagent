@@ -2,9 +2,22 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { createServer } from 'http';
+import winston from 'winston';
 
 // Load environment variables
 dotenv.config();
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.File({ filename: 'logs/app.log' }),
+    new winston.transports.Console()
+  ]
+});
 
 const app = express();
 const server = createServer(app);
@@ -13,7 +26,7 @@ const PORT = process.env.PORT || 3000;
 
 // Test route - should be the first route registered
 app.get('/test-route', (req, res) => {
-  console.log('Test route hit!');
+  logger.info('Test route hit!');
   res.json({ success: true, message: 'Test route is working!' });
 });
 
@@ -32,7 +45,7 @@ const corsOptions = {
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.warn(`Blocked request from unauthorized origin: ${origin}`);
+      logger.warn(`Blocked request from unauthorized origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -60,7 +73,7 @@ app.get('/health', (req, res) => {
 });
 
 // API routes
-console.log('Registering API routes...');
+logger.info('Registering API routes...');
 
 app.get('/api/health', (req, res) => {
   res.json({
@@ -131,9 +144,9 @@ app.get('/api/reports', (req, res) => {
   });
 });
 
-console.log('Registering /api/analytics/dashboard route...');
+logger.info('Registering /api/analytics/dashboard route...');
 app.get('/api/analytics/dashboard', (req, res) => {
-  console.log('Received request to /api/analytics/dashboard');
+  logger.info('Received request to /api/analytics/dashboard');
   try {
     // Set CORS headers explicitly
     res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
@@ -153,7 +166,7 @@ app.get('/api/analytics/dashboard', (req, res) => {
       data: dashboardData
     });
   } catch (error) {
-    console.error('Error in /api/analytics/dashboard:', error);
+    logger.error('Error in /api/analytics/dashboard:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -192,7 +205,7 @@ app.get('/api/auth/me', (req, res) => {
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('Error:', err);
+  logger.error('Error:', err);
   res.status(500).json({
     success: false,
     error: {
@@ -215,10 +228,10 @@ app.use('*', (req, res) => {
 
 // Start server
 server.listen(PORT, () => {
-  console.log(`🚀 BahinLink Backend API is running on port ${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/health`);
-  console.log(`🔧 API endpoints: http://localhost:${PORT}/api`);
-  console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+  logger.info(`🚀 BahinLink Backend API is running on port ${PORT}`);
+  logger.info(`📊 Health check: http://localhost:${PORT}/health`);
+  logger.info(`🔧 API endpoints: http://localhost:${PORT}/api`);
+  logger.info(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
 // Graceful shutdown

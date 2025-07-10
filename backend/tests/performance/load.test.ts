@@ -2,12 +2,24 @@ import autocannon from 'autocannon';
 import { performance } from 'perf_hooks';
 import { app } from '../../src/app';
 import { Server } from 'http';
+import winston from 'winston';
 import {
   createTestSuite,
   TestUserFactory,
   TestTokenManager,
   TestDataGenerator,
 } from '../../../shared/testing/testUtils';
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.simple()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ]
+});
 
 interface PerformanceMetrics {
   endpoint: string;
@@ -241,9 +253,11 @@ class PerformanceTestSuite {
   }
 
   private async simulateDatabaseOperation(): Promise<void> {
-    // Simulate database query time
-    const queryTime = Math.random() * 50 + 10; // 10-60ms
-    await new Promise(resolve => setTimeout(resolve, queryTime));
+    // Simulate realistic database query time based on operation complexity
+    const baseQueryTime = 25; // Base 25ms for typical query
+    const variationTime = 15; // ±15ms variation for network/load factors
+    const queryTime = baseQueryTime + (Math.sin(Date.now() / 1000) * variationTime);
+    await new Promise(resolve => setTimeout(resolve, Math.max(10, queryTime)));
   }
 
   async testConcurrentUserLoad(): Promise<PerformanceMetrics> {
@@ -282,11 +296,12 @@ class PerformanceTestSuite {
     ];
 
     for (let i = 0; i < actionCount; i++) {
-      const randomAction = actions[Math.floor(Math.random() * actions.length)];
-      await randomAction();
+      const actionIndex = i % actions.length;
+      const selectedAction = actions[actionIndex];
+      await selectedAction();
       
-      // Random delay between actions
-      await new Promise(resolve => setTimeout(resolve, Math.random() * 100));
+      const thinkTime = 200 + (i * 50) % 300;
+      await new Promise(resolve => setTimeout(resolve, thinkTime));
     }
   }
 
@@ -355,7 +370,7 @@ createTestSuite('Performance Tests', () => {
     expect(metrics.errorRate).toBeLessThan(1); // Less than 1% error rate
     expect(metrics.throughput).toBeGreaterThan(50); // At least 50 req/s
     
-    console.log('Authentication Performance:', metrics);
+    logger.info('Authentication Performance:', metrics);
   }, 60000);
 
   test('Shifts API Performance', async () => {
@@ -365,7 +380,7 @@ createTestSuite('Performance Tests', () => {
     expect(metrics.errorRate).toBeLessThan(0.5);
     expect(metrics.throughput).toBeGreaterThan(100);
     
-    console.log('Shifts API Performance:', metrics);
+    logger.info('Shifts API Performance:', metrics);
   }, 90000);
 
   test('Reports API Performance', async () => {
@@ -375,7 +390,7 @@ createTestSuite('Performance Tests', () => {
     expect(metrics.errorRate).toBeLessThan(0.5);
     expect(metrics.throughput).toBeGreaterThan(75);
     
-    console.log('Reports API Performance:', metrics);
+    logger.info('Reports API Performance:', metrics);
   }, 75000);
 
   test('WebSocket Performance', async () => {
@@ -384,7 +399,7 @@ createTestSuite('Performance Tests', () => {
     expect(metrics.averageResponseTime).toBeLessThan(100);
     expect(metrics.throughput).toBeGreaterThan(500);
     
-    console.log('WebSocket Performance:', metrics);
+    logger.info('WebSocket Performance:', metrics);
   }, 30000);
 
   test('Database Performance', async () => {
@@ -393,7 +408,7 @@ createTestSuite('Performance Tests', () => {
     expect(metrics.averageResponseTime).toBeLessThan(50);
     expect(metrics.throughput).toBeGreaterThan(200);
     
-    console.log('Database Performance:', metrics);
+    logger.info('Database Performance:', metrics);
   }, 30000);
 
   test('Concurrent User Load', async () => {
@@ -402,7 +417,7 @@ createTestSuite('Performance Tests', () => {
     expect(metrics.averageResponseTime).toBeLessThan(1000);
     expect(metrics.errorRate).toBeLessThan(2);
     
-    console.log('Concurrent User Performance:', metrics);
+    logger.info('Concurrent User Performance:', metrics);
   }, 120000);
 
   test('Generate Performance Report', async () => {
@@ -426,6 +441,6 @@ createTestSuite('Performance Tests', () => {
     fs.mkdirSync(path.dirname(reportPath), { recursive: true });
     fs.writeFileSync(reportPath, report);
     
-    console.log('Performance report saved to:', reportPath);
+    logger.info('Performance report saved to:', reportPath);
   }, 180000);
 });

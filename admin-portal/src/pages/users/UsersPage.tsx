@@ -291,7 +291,7 @@ const UsersPage: React.FC = () => {
             <Grid item xs={12} sm={6} md={4}>
               <TextField
                 fullWidth
-                placeholder="Search users..."
+                placeholder="Enter username, email, or full name to search"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 InputProps={{

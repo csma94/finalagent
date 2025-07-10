@@ -214,7 +214,7 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ navigation }) => {
       <View style={styles.header}>
         <Title style={styles.title}>My Reports</Title>
         <Searchbar
-          placeholder="Search reports..."
+          placeholder="Search by report title or site name"
           onChangeText={setSearchQuery}
           value={searchQuery}
           style={styles.searchbar}

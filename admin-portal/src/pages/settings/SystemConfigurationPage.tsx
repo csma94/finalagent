@@ -528,7 +528,7 @@ const SystemConfigurationPage: React.FC = () => {
             label="IP Address"
             value={newIpAddress}
             onChange={(e) => setNewIpAddress(e.target.value)}
-            placeholder="192.168.1.1"
+            placeholder="Enter IPv4 address (e.g., 192.168.1.1 or 10.0.0.1)"
             margin="normal"
           />
         </DialogContent>

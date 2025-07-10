@@ -1,9 +1,22 @@
 const express = require('express');
 const cors = require('cors');
 const { createServer } = require('http');
+const winston = require('winston');
 
 // Load environment variables
 require('dotenv').config();
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.File({ filename: 'logs/app.log' }),
+    new winston.transports.Console()
+  ]
+});
 
 const app = express();
 const server = createServer(app);
@@ -70,7 +83,7 @@ app.get('/api/auth/me', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  logger.error('Error:', err);
   res.status(500).json({
     success: false,
     error: {
@@ -93,25 +106,25 @@ app.use('*', (req, res) => {
 
 // Start server
 server.listen(PORT, () => {
-  console.log(`🚀 BahinLink Backend API is running on port ${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/health`);
-  console.log(`🔧 API endpoints: http://localhost:${PORT}/api`);
-  console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+  logger.info(`🚀 BahinLink Backend API is running on port ${PORT}`);
+  logger.info(`📊 Health check: http://localhost:${PORT}/health`);
+  logger.info(`🔧 API endpoints: http://localhost:${PORT}/api`);
+  logger.info(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully');
+  logger.info('SIGTERM received, shutting down gracefully');
   server.close(() => {
-    console.log('Server closed');
+    logger.info('Server closed');
     process.exit(0);
   });
 });
 
 process.on('SIGINT', () => {
-  console.log('SIGINT received, shutting down gracefully');
+  logger.info('SIGINT received, shutting down gracefully');
   server.close(() => {
-    console.log('Server closed');
+    logger.info('Server closed');
     process.exit(0);
   });
 });

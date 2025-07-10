@@ -14,6 +14,13 @@ import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import { useNavigation } from '@react-navigation/native';
 
+const logger = {
+  info: (message: string, ...args: any[]) => console.log(`[INFO] ${message}`, ...args),
+  warn: (message: string, ...args: any[]) => console.warn(`[WARN] ${message}`, ...args),
+  error: (message: string, ...args: any[]) => console.error(`[ERROR] ${message}`, ...args),
+  debug: (message: string, ...args: any[]) => console.log(`[DEBUG] ${message}`, ...args),
+};
+
 interface CameraScreenProps {
   onPhotoTaken?: (photoUri: string) => void;
   maxPhotos?: number;
@@ -69,14 +76,14 @@ const CameraScreen: React.FC<CameraScreenProps> = ({
           try {
             await MediaLibrary.saveToLibraryAsync(photo.uri);
           } catch (error) {
-            console.log('Failed to save to gallery:', error);
+            logger.warn('Failed to save to gallery:', error);
           }
         }
 
         // Show success feedback
         Alert.alert('Photo Captured', 'Photo has been saved successfully!');
       } catch (error) {
-        console.error('Failed to take picture:', error);
+        logger.error('Failed to take picture:', error);
         Alert.alert('Error', 'Failed to capture photo. Please try again.');
       }
     }

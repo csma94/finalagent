@@ -395,11 +395,11 @@ if (require.main === module) {
   
   migrator.migrate(options)
     .then((result) => {
-      console.log('Migration completed successfully:', result);
+      logger.info('Migration completed successfully:', result);
       process.exit(0);
     })
     .catch((error) => {
-      console.error('Migration failed:', error.message);
+      logger.error('Migration failed:', error.message);
       process.exit(1);
     });
 }

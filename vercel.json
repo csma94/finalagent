@@ -7,7 +7,7 @@
       "src": "admin-portal/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "admin-portal/build",
+        "distDir": "build",
         "buildCommand": "cd admin-portal && npm install && npm run build"
       }
     },
@@ -15,7 +15,7 @@
       "src": "client-portal/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "client-portal/build",
+        "distDir": "build",
         "buildCommand": "cd client-portal && npm install && npm run build"
       }
     },

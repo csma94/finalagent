@@ -3,6 +3,12 @@
  * Validates required environment variables for Clerk authentication
  */
 
+const logger = {
+  info: (message: string) => console.log(`[INFO] ${message}`),
+  error: (message: string, error?: any) => console.error(`[ERROR] ${message}`, error),
+  warn: (message: string) => console.warn(`[WARN] ${message}`)
+};
+
 interface EnvironmentConfig {
   apiUrl: string;
   wsUrl: string;
@@ -58,9 +64,9 @@ export const getEnvironmentConfig = (): EnvironmentConfig => {
 export const validateEnvironment = (): void => {
   try {
     getEnvironmentConfig();
-    console.log('✅ Environment configuration validated successfully');
+    logger.info('✅ Environment configuration validated successfully');
   } catch (error) {
-    console.error('❌ Environment validation failed:', error);
+    logger.error('❌ Environment validation failed:', error);
     throw error;
   }
 };

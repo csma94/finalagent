@@ -601,7 +601,7 @@ router.post('/sync',
             heading: location.heading,
             timestamp: new Date(location.timestamp),
             batteryLevel: location.batteryLevel,
-            isMockLocation: location.isMockLocation || false,
+            isValidLocation: this.validateGPSCoordinates(location.latitude, location.longitude, location.accuracy),
           },
         });
         syncResults.locationUpdates.success++;

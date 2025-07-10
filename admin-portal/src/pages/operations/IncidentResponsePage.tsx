@@ -692,7 +692,7 @@ const IncidentResponsePage: React.FC = () => {
 
             <TextField
               size="small"
-              placeholder="Search incidents..."
+              placeholder="Search by incident title or description"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               InputProps={{

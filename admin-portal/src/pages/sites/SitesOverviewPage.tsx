@@ -455,7 +455,7 @@ const SitesOverviewPage: React.FC = () => {
 
         <TextField
           size="small"
-          placeholder="Search sites..."
+          placeholder="Search by site name or client company..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           InputProps={{

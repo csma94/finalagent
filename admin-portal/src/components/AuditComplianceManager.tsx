@@ -395,7 +395,7 @@ const AuditComplianceManager: React.FC = () => {
                       label="User"
                       value={filterUser}
                       onChange={(e) => setFilterUser(e.target.value)}
-                      placeholder="Filter by user..."
+                      placeholder="Enter username or email to filter audit logs"
                     />
                   </Grid>
                   <Grid item xs={12} md={2}>

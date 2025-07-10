@@ -31,6 +31,13 @@ import AlertsCard from '../../components/dashboard/AlertsCard';
 import PerformanceChart from '../../components/dashboard/PerformanceChart';
 import LiveMapCard from '../../components/dashboard/LiveMapCard';
 
+const logger = {
+  info: (message: string, ...args: any[]) => console.log(`[INFO] ${message}`, ...args),
+  error: (message: string, ...args: any[]) => console.error(`[ERROR] ${message}`, ...args),
+  warn: (message: string, ...args: any[]) => console.warn(`[WARN] ${message}`, ...args),
+  debug: (message: string, ...args: any[]) => console.debug(`[DEBUG] ${message}`, ...args)
+};
+
 const DashboardPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [refreshing, setRefreshing] = useState(false);
@@ -51,7 +58,7 @@ const DashboardPage: React.FC = () => {
   // Real-time updates via Socket.IO
   useSocket('dashboard_update', (data: any) => {
     // Handle real-time dashboard updates
-    console.log('Dashboard update received:', data);
+    logger.info('Dashboard update received:', data);
     // You could dispatch specific actions to update parts of the dashboard
   });
 
@@ -59,7 +66,7 @@ const DashboardPage: React.FC = () => {
     try {
       await dispatch(fetchDashboardData()).unwrap();
     } catch (error) {
-      console.error('Failed to load dashboard data:', error);
+      logger.error('Failed to load dashboard data:', error);
     }
   }, [dispatch]);
 

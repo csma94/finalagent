@@ -124,8 +124,9 @@ router.post('/track',
       }
     }
 
-    // Detect mock location and anomalies
-    const isMockLocation = accuracy === 0 || accuracy === 1;
+    // Validate GPS accuracy and detect potential issues
+    const hasLowAccuracy = accuracy && accuracy > 100; // Flag locations with poor accuracy (>100m)
+    const hasSuspiciousAccuracy = accuracy === 0 || accuracy === 1; // Extremely precise readings may indicate spoofing
 
     // Monitor geofence compliance
     const geofenceResult = await geofencingService.monitorAgentLocation(
@@ -148,7 +149,8 @@ router.post('/track',
         heading,
         timestamp: new Date(timestamp),
         batteryLevel,
-        isMockLocation,
+        hasLowAccuracy,
+        hasSuspiciousAccuracy,
       },
     });
 
@@ -164,7 +166,8 @@ router.post('/track',
         shiftId,
         geofenceStatus: geofenceResult.status,
         distance: geofenceResult.distance,
-        isMockLocation,
+        hasLowAccuracy,
+        hasSuspiciousAccuracy,
       });
     }
 
@@ -175,7 +178,10 @@ router.post('/track',
       geofenceStatus: geofenceResult.status,
       compliance: geofenceResult.status === 'compliant',
       distance: geofenceResult.distance,
-      warnings: isMockLocation ? ['Mock location detected'] : [],
+      warnings: [
+        ...(hasLowAccuracy ? ['Low GPS accuracy detected'] : []),
+        ...(hasSuspiciousAccuracy ? ['Suspicious GPS accuracy - possible location spoofing'] : [])
+      ],
     });
   })
 );

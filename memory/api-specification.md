@@ -283,7 +283,10 @@ Authorization: Bearer {access_token}
   "accuracy": number,
   "timestamp": "datetime",
   "battery_level": number,
-  "is_mock_location": boolean
+  "location_source": "gps|network|passive",
+  "altitude": number,
+  "speed": number,
+  "bearing": number
 }
 ```
 

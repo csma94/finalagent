@@ -478,14 +478,23 @@ class LocationAnalyticsService {
       });
     }
     
-    // Mock location detection (perfect accuracy)
-    if (curr.accuracy === 0 || curr.accuracy === 1) {
-      anomalies.push({
-        type: 'mock_location',
-        severity: 'medium',
-        description: 'Suspicious location accuracy suggests mock location',
-        accuracy: curr.accuracy,
-      });
+    if (curr.accuracy !== null && curr.accuracy !== undefined) {
+      if (curr.accuracy < 1) {
+        anomalies.push({
+          type: 'suspicious_accuracy',
+          severity: 'low',
+          description: `Unusually high GPS accuracy: ${curr.accuracy}m`,
+          accuracy: curr.accuracy,
+        });
+      }
+      if (curr.accuracy > 100) {
+        anomalies.push({
+          type: 'poor_accuracy',
+          severity: 'medium',
+          description: `Poor GPS accuracy: ${curr.accuracy}m`,
+          accuracy: curr.accuracy,
+        });
+      }
     }
     
     return anomalies.length > 0 ? anomalies : null;

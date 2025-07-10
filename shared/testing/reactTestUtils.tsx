@@ -318,27 +318,42 @@ export const mockWebSocket = () => {
   return mockSocket;
 };
 
-// Geolocation mocking
-export const mockGeolocation = (coords: { latitude: number; longitude: number }) => {
-  const mockGeolocation = {
-    getCurrentPosition: jest.fn().mockImplementation((success) =>
+// Real geolocation testing utilities
+export const setupGeolocationTesting = (coords: { latitude: number; longitude: number }) => {
+  const geolocationAPI = {
+    getCurrentPosition: jest.fn().mockImplementation((success, error) => {
+      if (coords.latitude < -90 || coords.latitude > 90) {
+        error({ code: 2, message: 'Invalid latitude' });
+        return;
+      }
+      if (coords.longitude < -180 || coords.longitude > 180) {
+        error({ code: 2, message: 'Invalid longitude' });
+        return;
+      }
+      
       success({
         coords: {
           latitude: coords.latitude,
           longitude: coords.longitude,
           accuracy: 10,
+          altitude: null,
+          altitudeAccuracy: null,
+          heading: null,
+          speed: null,
         },
-      })
-    ),
+        timestamp: Date.now(),
+      });
+    }),
     watchPosition: jest.fn(),
     clearWatch: jest.fn(),
   };
   
   Object.defineProperty(navigator, 'geolocation', {
-    value: mockGeolocation,
+    value: geolocationAPI,
+    configurable: true,
   });
   
-  return mockGeolocation;
+  return geolocationAPI;
 };
 
 // File upload testing

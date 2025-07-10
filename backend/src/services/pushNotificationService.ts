@@ -122,7 +122,7 @@ class PushNotificationService {
 
   public async sendNotification(notification: Omit<PushNotification, 'id' | 'createdAt'>): Promise<string> {
     try {
-      const notificationId = `notif_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const notificationId = `notif_${Date.now()}_${Buffer.from(`${notification.userId}_${notification.title}_${Date.now()}`).toString('base64').substr(0, 9)}`;
       
       const fullNotification: PushNotification = {
         ...notification,
@@ -311,7 +311,7 @@ class PushNotificationService {
     scheduledFor: Date
   ): Promise<string> {
     try {
-      const notificationId = `scheduled_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const notificationId = `scheduled_${Date.now()}_${Buffer.from(`${notification.userId}_${notification.title}_${scheduledFor.getTime()}`).toString('base64').substr(0, 9)}`;
       
       const scheduledNotification: PushNotification = {
         ...notification,

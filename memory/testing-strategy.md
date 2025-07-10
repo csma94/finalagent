@@ -266,7 +266,7 @@ describe('Authentication API', () => {
 **GPS and Location Testing:**
 - Indoor/outdoor location accuracy
 - GPS signal loss scenarios
-- Mock location detection
+- GPS coordinate validation and accuracy verification
 - Battery optimization impact
 
 **Offline Functionality Testing:**

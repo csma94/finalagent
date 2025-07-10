@@ -532,17 +532,43 @@ class APIIntegrationService {
   }
 
   async testEndpointAvailability(test) {
-    // Simulate endpoint availability testing
-    // In a real implementation, this would make actual HTTP requests
-    return {
-      name: test.name,
-      endpoint: test.endpoint,
-      method: test.method,
-      status: 'PASS',
-      responseTime: Math.floor(Math.random() * 200) + 50, // 50-250ms
-      statusCode: 200,
-      testedAt: new Date()
-    };
+    const axios = require('axios');
+    const startTime = Date.now();
+    
+    try {
+      const baseURL = process.env.API_BASE_URL || 'http://localhost:3000';
+      const response = await axios({
+        method: test.method.toLowerCase(),
+        url: `${baseURL}${test.endpoint}`,
+        timeout: 5000,
+        validateStatus: (status) => status < 500 // Accept 4xx as valid responses
+      });
+      
+      const responseTime = Date.now() - startTime;
+      
+      return {
+        name: test.name,
+        endpoint: test.endpoint,
+        method: test.method,
+        status: response.status < 400 ? 'PASS' : 'WARN',
+        responseTime,
+        statusCode: response.status,
+        testedAt: new Date()
+      };
+    } catch (error) {
+      const responseTime = Date.now() - startTime;
+      
+      return {
+        name: test.name,
+        endpoint: test.endpoint,
+        method: test.method,
+        status: 'FAIL',
+        responseTime,
+        statusCode: error.response?.status || 0,
+        error: error.message,
+        testedAt: new Date()
+      };
+    }
   }
 
   async validateIntegration(integration) {

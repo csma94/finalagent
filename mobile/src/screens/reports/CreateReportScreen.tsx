@@ -290,7 +290,7 @@ const CreateReportScreen: React.FC = () => {
             mode="outlined"
             multiline
             numberOfLines={4}
-            placeholder="Describe what happened, what you observed, or any relevant details..."
+            placeholder="Provide detailed information about the incident, observations, actions taken, or other relevant details for this report"
           />
 
           <View style={styles.prioritySection}>
